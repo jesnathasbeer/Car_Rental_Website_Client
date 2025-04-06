@@ -7,13 +7,15 @@ export const Header = () => {
 const navigate = useNavigate()
 
     return (
-        <div className="flex justify-between items-center p-14 h-20 shadow-2xl ">
+        <div className="shadow-md bg-white">
+      <div className="container mx-auto flex justify-between items-center p-4">
+        {/* <div className="flex justify-between items-center p-4 shadow-md bg-white"> */}
             <div>
-                <h1 className="text-3xl font-bold">RentACar</h1>
+                <h1 className="text-2xl font-bold">RentACar</h1>
             </div>
             <div className="flex justify-center items-center gap-16">
                 <nav>
-                    <ul className="flex justify-center items-center gap-10 text-md">
+                    <ul className="flex justify-center font-bold items-center gap-10 text-md">
                         <Link to={"/"}>
                             {" "}
                             <li>Home</li>{" "}
@@ -22,19 +24,23 @@ const navigate = useNavigate()
                             {" "}
                             <li>About</li>{" "}
                         </Link>
+                        <a href="#services">
+                            <li>Our Services</li>
+                        </a>
                         <Link to={"/courses"}>
                             {" "}
-                            <li>Cars</li>{" "}
+                            <li>Contact Us</li>{" "}
                         </Link>
                     </ul>
                 </nav>
                 <div className="flex justify-center gap-3">
-                    <DarkMode />
-                    <button className="btn btn-primary" onClick={()=>navigate('/signup')} >Join Us</button>
-                    <button className="btn btn-primary" onClick={()=>navigate('/login')} >Login</button>
+                    {/* <DarkMode /> */}
+                    <button className="btn btn-warning" onClick={()=>navigate('/signup')} >Join Us</button>
+                    <button className="btn btn-warning" onClick={()=>navigate('/login')} >Login</button>
 
                 </div>
             </div>
         </div>
+    </div>
     );
 };
