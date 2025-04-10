@@ -16,7 +16,7 @@ const Home = () => {
           <h1 className="text-3xl font-bold">Safer, Faster,<br /> and Comfortable</h1>
           <p className="mt-3 text-xl">Get in touch with our <br /> modern cars.</p>
           <button
-  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+  className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition duration-300"
   onClick={() => {
     const bookingSection = document.getElementById("booking");
     if (bookingSection) {

@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { DarkMode } from "../shared/DarkMode";
 
 export const Header = () => {
 
@@ -16,20 +15,23 @@ const navigate = useNavigate()
             <div className="flex justify-center items-center gap-16">
                 <nav>
                     <ul className="flex justify-center font-bold items-center gap-10 text-md">
-                        <Link to={"/"}>
+                        <Link to={"/"} className="text-gray-800 hover:text-yellow-600 transition duration-300">
                             {" "}
                             <li>Home</li>{" "}
                         </Link>
-                        <Link to={"/about"}>
+                        <a href="/#about" className="text-gray-800 hover:text-yellow-600 transition duration-300">
+                            <li>About</li>
+                        </a>                   
+                        <Link to={"/cars"} className="text-gray-800 hover:text-yellow-600 transition duration-300">
                             {" "}
-                            <li>About</li>{" "}
+                            <li>Cars</li>{" "}
                         </Link>
-                        <a href="#services">
+                        <a href="/#services" className="text-gray-800 hover:text-yellow-600 transition duration-300">
                             <li>Our Services</li>
                         </a>
-                        <Link to={"/courses"}>
+                        <Link to={"/contact"} className="text-gray-800 hover:text-yellow-600 transition duration-300">
                             {" "}
-                            <li>Contact Us</li>{" "}
+                            <li>Contact</li>{" "}
                         </Link>
                     </ul>
                 </nav>

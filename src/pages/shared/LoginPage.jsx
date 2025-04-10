@@ -4,102 +4,114 @@ import { axiosInstance } from "../../config/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser, saveUser } from "../../redux/features/userSlice";
-// import toast from "react-hot-toast";
+import { FaEnvelope, FaLock } from "react-icons/fa";
+import { motion } from "framer-motion";
+import loginIllustration from "../../assets/RentACar-img2.jpg"; // 🖼️ Add your illustration here
 
 export const LoginPage = ({ role }) => {
-    const { register, handleSubmit } = useForm();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const user = {
-        role: "user",
-        loginAPI: "/user/login",
-        profileRoute: "/user/profile",
-        signupRoute: "/signup",
-    };
+  const user = {
+    role: role || "user",
+    loginAPI: role === "admin" ? "/admin/login" : "/user/login",
+    profileRoute: role === "admin" ? "/admin/profile" : "/user/profile",
+    signupRoute: role === "admin" ? "/admin/signup" : "/signup",
+  };
 
-    if (role == "mentor") {
-        user.role = "mentor";
-        user.loginAPI = "/mentor/login";
-        (user.profileRoute = "/mentor/profile"), (user.signupRoute = "/mentor/signup");
+  const onSubmit = async (data) => {
+    try {
+      const response = await axiosInstance.put(user.loginAPI, data);
+      dispatch(saveUser(response?.data?.data));
+      navigate(user.profileRoute);
+    } catch (error) {
+      dispatch(clearUser());
+      console.error("Login failed:", error);
     }
+  };
 
-    const onSubmit = async (data) => {
-
-        try {
-            const response = await axiosInstance({
-                method: "PUT",
-                url: user.loginAPI,
-                data: data,
-            });
-            console.log("response====", response);
-            dispatch(saveUser(response?.data?.data));
-            // toast.success("Login success");
-            navigate(user.profileRoute);
-        } catch (error) {
-            dispatch(clearUser());
-            // toast.error("Login Failed");
-            console.log(error);
-        }
-    };
-
-    return (
-        <div className="bg-base-200 hero min-h-screen">
-            <div className="flex-col hero-content lg:flex-row-reverse">
-                <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold">Login now! {user.role} </h1>
-                    <p className="py-6">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque
-                        aut repudiandae et a id nisi.
-                    </p>
-                </div>
-                <div className="card bg-base-100 shadow-2xl w-full max-w-sm shrink-0">
-                    <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Email</span>
-                            </label>
-                            <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required />
-                        </div>
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Password</span>
-                            </label>
-                            <input
-                                type="password"
-                                placeholder="password"
-                                {...register("password")}
-                                className="input input-bordered"
-                                required
-                            />
-
-                            <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Confirm Password</span>
-                                </label>
-                                <input
-                                    type="password"
-                                    placeholder="confirm-password"
-                                    {...register("confirmPassword")}
-                                    className="input input-bordered"
-                                    required
-                                />
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <label className="label">
-                                    <Link>Forgot password?</Link>
-                                </label>
-                                <label className="label">
-                                    <Link to={user.signupRoute}>New User?</Link>
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-control mt-6">
-                            <button className="btn btn-primary">Login</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-blue-100 flex items-center justify-center px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white shadow-xl rounded-3xl w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden"
+      >
+        {/* Illustration */}
+        <div className="hidden md:flex items-center justify-center bg-blue-100 p-6">
+          <img src={loginIllustration} alt="Login Visual" className="w-3/4 object-contain" />
         </div>
-    );
+
+        {/* Form */}
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-center mb-2">Login</h2>
+          <p className="text-center text-gray-500 mb-6">
+            Sign in as <span className="capitalize font-semibold">{user.role}</span>
+          </p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Email</label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="email"
+                  {...register("email", { required: "Email is required" })}
+                  placeholder="Enter your email"
+                  className="input input-bordered w-full pl-10"
+                />
+              </div>
+              {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
+            </div>
+
+            {/* Password */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <div className="relative">
+                <FaLock className="absolute left-3 top-3 text-gray-400" />
+                <input
+                  type="password"
+                  {...register("password", { required: "Password is required" })}
+                  placeholder="Enter password"
+                  className="input input-bordered w-full pl-10"
+                />
+              </div>
+              {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input
+                type="password"
+                {...register("confirmPassword", { required: "Confirm your password" })}
+                placeholder="Re-enter password"
+                className="input input-bordered w-full"
+              />
+              {errors.confirmPassword && <p className="text-xs text-red-500 mt-1">{errors.confirmPassword.message}</p>}
+            </div>
+
+            {/* Links */}
+            <div className="flex justify-between items-center text-sm text-blue-600 mt-2">
+              <Link to="#" className="hover:underline">Forgot password?</Link>
+              <Link to={user.signupRoute} className="hover:underline">New user? Sign Up</Link>
+            </div>
+
+            {/* Submit */}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              type="submit"
+              className="w-full py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-semibold transition duration-200"
+            >
+              Login
+            </motion.button>
+          </form>
+        </div>
+      </motion.div>
+    </div>
+  );
 };

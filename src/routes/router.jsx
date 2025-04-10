@@ -1,7 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import { About } from "../pages/user/About";
-import { Contact } from "../pages/user/Contact";
-// import { Home } from "../pages/user/Home";
 import { Profile } from "../pages/user/Profile";
 import { ProtectRoutes } from "./ProtectRoutes";
 import { ErrorPage } from "../pages/shared/ErrorPage";
@@ -10,6 +7,8 @@ import { LoginPage } from "../pages/shared/LoginPage";
 import { MentorLayout } from "../layout/mentorLayout";
 import { RootLayout } from "../layout/rootLayout";
 import Home from "../pages/user/Home";
+import Contact from "../pages/user/Contact";
+import { SignupPage } from "../pages/shared/SignupPage";
 
 
 export const router = createBrowserRouter([
@@ -22,21 +21,21 @@ export const router = createBrowserRouter([
                 path: "",
                 element: <Home />,
             },
-            {
-                path: "about",
-                element: <About />,
-            },
-            {
-                path: "contact",
-                element: <Contact />,
-            },
+            // {
+            //     path: "about",
+            //     element: <About />,
+            // },
+             {
+                 path: "contact",
+                 element: <Contact />,
+             },
             {
                 path: "login",
                 element: <LoginPage />,
             },
             {
                 path: "signup",
-                element: <h1>Signup</h1>,
+                element: <SignupPage />,
             },
             {
                 path: "cars",
