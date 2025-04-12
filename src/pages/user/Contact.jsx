@@ -4,7 +4,7 @@ const Contact = () => {
   return (
     <div className="min-h-screen bg-white py-16 px-6 md:px-24">
       {/* Heading */}
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-black dark:text-blue-950">
         Contact Us
       </h2>
       <p className="text-center text-gray-600 max-w-xl mx-auto mb-10">

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { clearUser, saveUser } from "../../redux/features/userSlice";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
-import loginIllustration from "../../assets/RentACar-img2.jpg"; // 🖼️ Add your illustration here
+import loginIllustration from "../../assets/RentACar-img9.jpg"; // 🖼️ Add your illustration here
 
 export const LoginPage = ({ role }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
