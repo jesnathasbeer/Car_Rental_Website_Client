@@ -16,25 +16,50 @@ export const RootLayout = () => {
     const location = useLocation();
 
     const checkUser = async () => {
-        try {
-            const response = await axiosInstance({ method: "GET", url: "/user/check-user" });
-            console.log(response, "========checkUser response");
-            dispatch(saveUser());
-            setIsLoading(false);
-        } catch (error) {
-            console.log(error);
-            dispatch(clearUser());
-        }
-    };
+            const token = localStorage.getItem("token");
+            if (!token) {
+              dispatch(clearUser());
+              setIsLoading(false);
+              return;
+            }
+          
+            try {
+              const response = await axiosInstance.get("/user/check-user");
+              console.log(response.data, "========checkUser response");
+              
+              dispatch(saveUser(response.data.user)); // <-- Pass actual user
+            } catch (error) {
+              console.log("checkUser error:", error);
+              dispatch(clearUser());
+            } finally {
+              setIsLoading(false);
+            }
+          };
+          
+        
+        //  try {
+        //      const response = await axiosInstance({ method: "GET", url: "/user/check-user" });
+        //      console.log(response, "========checkUser response");
+        //      dispatch(saveUser());
+        //      setIsLoading(false);
+        //  } catch (error) {
+        //      console.log(error);
+        //      dispatch(clearUser());
+        //      setIsLoading(false);
+        // }
+        
 
+
+
+    
     useEffect(() => {
         checkUser();
     }, [location.pathname]);
 
     return isLoading ? null : (
         <div>
-             <Header />
-            {/* {user.isUserAuth ? <UserHeader /> : <Header />} */}
+             {/* <Header /> */}
+            {user.isUserAuth ? <UserHeader /> : <Header />}
             <div className="min-h-96">
                 <Outlet />
             </div>

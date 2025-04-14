@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CourseCardSkeltons = () => {
+export const CarCardSkeltons = () => {
     return (
         <div className="flex w-52 flex-col gap-4">
             <div className="skeleton h-32 w-full"></div>

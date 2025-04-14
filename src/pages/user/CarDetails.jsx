@@ -1,30 +1,40 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+import { useParams } from "react-router-dom";
+import { axiosInstance } from "../../config/axiosInstance";
+import toast from "react-hot-toast";
 
-const CarDetails = () => {
-  const [cars, setCars] = useState([]);
+export const CourseDetails = () => {
+    const params = useParams();
 
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/cars").then((res) => {
-      setCars(res.data);
-    });
-  }, []);
+    const [carDetails, isLoading, error] = useFetch(`/car/getCarById/${params?.id}`);
 
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold">Available Cars</h2>
-      <div className="grid grid-cols-3 gap-4 mt-4">
-        {cars.map((car) => (
-          <div key={car._id} className="border p-4 rounded shadow">
-            <img src={car.image} alt={car.name} className="w-full h-40 object-cover" />
-            <h3 className="text-xl font-semibold">{car.name}</h3>
-            <p>Price: ${car.pricePerDay}/day</p>
-            <button className="bg-blue-500 text-white px-3 py-1 mt-2">Rent Now</button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    // const handleAddToCart = async () => {
+    //     try {
+    //         const response = await axiosInstance({ method: "POST", data: { carId: params?.id }, url: "/cart/add-to-cart" });
+    //         console.log(response, "=====add to cart RES");
+    //         toast.success("course added to cart");
+    //     } catch (error) {
+    //         console.log(error);
+    //         toast.error(error?.response?.data?.message || "unable to add course to cart");
+    //     }
+    // };
+
+    return (
+        <div>
+            <h1>Course Details Page</h1>
+            <div>
+                <div>
+                    <h1>{carDetails?.title}</h1>
+                    <p>{carDetails?.priceperday}</p>
+                </div>
+                <div>
+                    <img src={carDetails?.image} alt="car-image" />
+                </div>
+                <button className="btn btn-success">
+                    Book Now
+                </button>
+            </div>
+        </div>
+    );
 };
-
-export default CarDetails;
