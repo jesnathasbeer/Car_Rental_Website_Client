@@ -22,14 +22,31 @@ export const LoginPage = ({ role }) => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axiosInstance.put(user.loginAPI, data);
+      const response = await axiosInstance({
+          method: "PUT",
+          url: user.loginAPI,
+          data: data,
+      });
+      console.log("response====", response);
       dispatch(saveUser(response?.data?.data));
+      // toast.success("Login success");
       navigate(user.profileRoute);
-    } catch (error) {
+  } catch (error) {
       dispatch(clearUser());
-      console.error("Login failed:", error);
-    }
-  };
+      // toast.error("Login Failed");
+      console.log(error);
+  }
+};
+  //   try {
+  //     const response = await axiosInstance.post(user.loginAPI, data);
+  //     dispatch(saveUser(response?.data?.data));
+  //     navigate(user.profileRoute);
+  //   } catch (error) {
+  //     dispatch(clearUser());
+  //     console.error("Login failed:", error);
+  //   }
+  // };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-blue-100 flex items-center justify-center px-4">

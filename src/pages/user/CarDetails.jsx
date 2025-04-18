@@ -1,24 +1,11 @@
-import React from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { useParams } from "react-router-dom";
-import { axiosInstance } from "../../config/axiosInstance";
-import toast from "react-hot-toast";
 
 export const CourseDetails = () => {
     const params = useParams();
 
     const [carDetails, isLoading, error] = useFetch(`/car/getCarById/${params?.id}`);
 
-    // const handleAddToCart = async () => {
-    //     try {
-    //         const response = await axiosInstance({ method: "POST", data: { carId: params?.id }, url: "/cart/add-to-cart" });
-    //         console.log(response, "=====add to cart RES");
-    //         toast.success("course added to cart");
-    //     } catch (error) {
-    //         console.log(error);
-    //         toast.error(error?.response?.data?.message || "unable to add course to cart");
-    //     }
-    // };
 
     return (
         <div>
