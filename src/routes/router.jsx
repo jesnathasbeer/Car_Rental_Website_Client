@@ -9,6 +9,7 @@ import { RootLayout } from "../layout/rootLayout";
 import Home from "../pages/user/Home";
 import Contact from "../pages/user/Contact";
 import SignupPage from "../pages/shared/SignupPage";
+import { AdminLayout } from "../layout/adminLayout";
 
 
 
@@ -22,10 +23,6 @@ export const router = createBrowserRouter([
                 path: "",
                 element: <Home />,
             },
-            // {
-            //     path: "about",
-            //     element: <About />,
-            // },
              {
                  path: "contact",
                  element: <Contact />,
@@ -59,17 +56,18 @@ export const router = createBrowserRouter([
             },
         ],
     },
-    // {
-    //     path: "mentor",
-    //     element: <MentorLayout />,
-    //     children: [
-    //         {
-    //             path: "login",
-    //             element: <LoginPage role="mentor" />,
-    //         },
-    //         {
-    //             path: "signup",
-    //         },
-    //     ],
-    // },
+    {
+        path: "admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "login",
+                element: <LoginPage role="admin" />,
+            },
+            {
+                path: "signup",
+                element: <SignupPage role="admin" />
+            },
+        ],
+    },
 ]);

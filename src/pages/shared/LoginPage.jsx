@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { axiosInstance } from "../../config/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearUser, saveUser } from "../../redux/features/userSlice";
+//import { clearUser, saveUser } from "../../redux/features/userSlice";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
 import loginIllustration from "../../assets/RentACar-img9.jpg"; // 🖼️ Add your illustration here
@@ -21,6 +21,7 @@ export const LoginPage = ({ role }) => {
   };
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       const response = await axiosInstance({
           method: "PUT",
@@ -28,12 +29,12 @@ export const LoginPage = ({ role }) => {
           data: data,
       });
       console.log("response====", response);
-      dispatch(saveUser(response?.data?.data));
-      // toast.success("Login success");
-      navigate(user.profileRoute);
+  //     dispatch(saveUser(response?.data?.data));
+  //     // toast.success("Login success");
+  //     navigate(user.profileRoute);
   } catch (error) {
-      dispatch(clearUser());
-      // toast.error("Login Failed");
+  //     dispatch(clearUser());
+  //     // toast.error("Login Failed");
       console.log(error);
   }
 };
@@ -63,7 +64,7 @@ export const LoginPage = ({ role }) => {
 
         {/* Form */}
         <div className="p-8">
-          <h2 className="text-3xl font-bold text-center mb-2">Login</h2>
+          <h2 className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-gray-100">Login</h2>
           <p className="text-center text-gray-500 mb-6">
             Sign in as <span className="capitalize font-semibold">{user.role}</span>
           </p>

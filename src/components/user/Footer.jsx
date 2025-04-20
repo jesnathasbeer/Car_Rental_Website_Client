@@ -23,7 +23,7 @@ export const Footer = () => {
                 <a className="link link-hover">Terms of use</a>
                 <a className="link link-hover">Privacy policy</a>
                 <a className="link link-hover">Cookie policy</a>
-                <Link to={"/mentor/login"}> Mentor Login </Link>
+                <Link to={"/admin/login"}> Admin Login </Link>
             </nav>
             <form>
                 <h6 className="footer-title">Newsletter</h6>
