@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { axiosInstance } from "../../config/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-//import { clearUser, saveUser } from "../../redux/features/userSlice";
+import { clearUser, saveUser } from "../../redux/features/userSlice";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
 import loginIllustration from "../../assets/RentACar-img9.jpg"; // 🖼️ Add your illustration here
@@ -29,11 +29,11 @@ export const LoginPage = ({ role }) => {
           data: data,
       });
       console.log("response====", response);
-  //     dispatch(saveUser(response?.data?.data));
+       dispatch(saveUser(response?.data?.data));
   //     // toast.success("Login success");
-  //     navigate(user.profileRoute);
+       navigate(user.profileRoute);
   } catch (error) {
-  //     dispatch(clearUser());
+       dispatch(clearUser());
   //     // toast.error("Login Failed");
       console.log(error);
   }

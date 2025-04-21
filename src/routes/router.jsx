@@ -4,7 +4,6 @@ import { ProtectRoutes } from "./ProtectRoutes";
 import { ErrorPage } from "../pages/shared/ErrorPage";
 import Cars from "../pages/user/Cars";
 import { LoginPage } from "../pages/shared/LoginPage";
-//import { MentorLayout } from "../layout/mentorLayout";
 import { RootLayout } from "../layout/rootLayout";
 import Home from "../pages/user/Home";
 import Contact from "../pages/user/Contact";

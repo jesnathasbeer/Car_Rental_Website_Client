@@ -39,7 +39,6 @@ const navigate = useNavigate()
                 <div className="flex justify-center gap-3">
                      <DarkMode />
                     <button className="btn btn-warning" onClick={()=>navigate('/signup')} >Join Us</button>
-                    <button className="btn btn-warning" onClick={()=>navigate('/login')} >Login</button>
 
                 </div>
             </div>
