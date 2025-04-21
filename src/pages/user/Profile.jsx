@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
+import { clearUser } from "../../redux/features/userSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 
 export const Profile = () => {
     const [userDetails, isLoading, error] = useFetch("/user/profile");
     const [showOrders, setShowOrders] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        dispatch(clearUser());
+        navigate("/");
+      };
 
     if (isLoading) return <p className="text-center text-lg">Loading...</p>;
     if (error) return <p className="text-center text-red-500">Error loading profile.</p>;
@@ -20,7 +33,7 @@ export const Profile = () => {
                     {showOrders ? "Hide Orders" : "Show Orders"}
                 </button>
                 <button className={buttonClass}>Change Password</button>
-                <button className={buttonClass}>Logout</button>
+                <button className={buttonClass}  onClick={handleLogout}>Logout</button>
             </div>
 
             {/* Profile Info Section */}

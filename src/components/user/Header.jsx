@@ -9,7 +9,6 @@ const navigate = useNavigate()
     return (
         <div className="shadow-md">
       <div className="container mx-auto flex justify-between items-center p-4">
-        {/* <div className="flex justify-between items-center p-4 shadow-md bg-white"> */}
             <div>
                 <h1 className="text-2xl font-bold">RentACar</h1>
             </div>
