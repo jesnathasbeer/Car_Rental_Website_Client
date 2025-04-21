@@ -9,10 +9,11 @@ import Home from "../pages/user/Home";
 import Contact from "../pages/user/Contact";
 import SignupPage from "../pages/shared/SignupPage";
 import { AdminLayout } from "../layout/AdminLayout";
+import React from "react";
 
 
 
-export const router = createBrowserRouter([
+const Router = createBrowserRouter([
     {
         path: "",
         element: <RootLayout />,
@@ -70,3 +71,5 @@ export const router = createBrowserRouter([
         ],
     },
 ]);
+
+export default Router
