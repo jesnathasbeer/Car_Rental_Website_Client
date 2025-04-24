@@ -37,7 +37,13 @@ const navigate = useNavigate()
                 </nav>
                 <div className="flex justify-center gap-3">
                      <DarkMode />
-                    <button className="btn btn-warning" onClick={()=>navigate('/signup')} >Join Us</button>
+                     <button
+  className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300"
+  onClick={() => navigate('/signup')}
+>
+  Join Us
+</button>
+
 
                 </div>
             </div>

@@ -1,4 +1,5 @@
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const BookingSection = () => (
   <div id="booking" className="bg-gray-100 dark:bg-gray-900 py-10 transition-all duration-300">
@@ -47,9 +48,12 @@ const BookingSection = () => (
         />
 
         {/* Book Button */}
-        <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded shadow">
+        <Link to="/login" className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded shadow">
+        Book
+              </Link>
+        {/* <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-6 py-2 rounded shadow">
           Book
-        </button>
+        </button> */}
       </div>
     </div>
   </div>

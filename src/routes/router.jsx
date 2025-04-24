@@ -10,6 +10,7 @@ import Contact from "../pages/user/Contact";
 import SignupPage from "../pages/shared/SignupPage";
 import { AdminLayout } from "../layout/AdminLayout";
 import React from "react";
+import { CarDetails } from "../pages/user/CarDetails";
 
 
 
@@ -38,6 +39,10 @@ const Router = createBrowserRouter([
             {
                 path: "cars",
                 element: <Cars />,
+            },
+            {
+                path:"CarDetails/:id",
+                element: <CarDetails />,
             },
             {
                 path: "user",
