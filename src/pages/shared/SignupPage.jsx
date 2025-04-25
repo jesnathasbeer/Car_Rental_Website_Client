@@ -12,12 +12,24 @@ const SignupPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [image, setImage] = React.useState(null);
+
 
   const onSubmit = async (data) => {
+    // const formData = new FormData();
+    // for (const key in data) {
+    //   formData.append(key, data[key]);
+    // }
     const formData = new FormData();
-    for (const key in data) {
-      formData.append(key, data[key]);
-    }
+
+for (const key in data) {
+  formData.append(key, data[key]);
+}
+
+if (image) {
+  formData.append("image", image); // important: "image" must match multer.single("image")
+}
+
 
     try {
       const response = await axiosInstance.post("/user/signup", formData, {
@@ -108,11 +120,18 @@ const SignupPage = () => {
 
             <div className="relative">
               <FaImage className="absolute left-3 top-3 text-gray-400" />
-              <input
+              {/* <input
                 type="file"
-                {...register("profilePic")}
+                {...register("image")}
                 className="file-input w-full pl-10 file-input-bordered"
-              />
+              /> */}
+              <input
+  type="file"
+  name="image"
+  onChange={(e) => setImage(e.target.files[0])}
+  className="file-input w-full pl-10 file-input-bordered"
+/>
+
             </div>
 
             <motion.button
