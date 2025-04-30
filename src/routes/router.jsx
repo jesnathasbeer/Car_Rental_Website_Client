@@ -11,8 +11,10 @@ import SignupPage from "../pages/shared/SignupPage";
 import { AdminLayout } from "../layout/AdminLayout";
 import React from "react";
 import { CarDetails } from "../pages/user/CarDetails";
-
-
+import Service from "../pages/user/Service";
+import About from "../pages/user/About";
+import CarBooking from "../pages/user/CarBooking";
+import Payment from "../pages/user/Payment";
 
 const Router = createBrowserRouter([
     {
@@ -24,10 +26,18 @@ const Router = createBrowserRouter([
                 path: "",
                 element: <Home />,
             },
+            {
+                path: "service",
+                element: <Service />
+            },
              {
                  path: "contact",
                  element: <Contact />,
              },
+             {
+                path: "about",
+                element: <About />,
+            },
             {
                 path: "login",
                 element: <LoginPage />,
@@ -43,6 +53,14 @@ const Router = createBrowserRouter([
             {
                 path:"CarDetails/:id",
                 element: <CarDetails />,
+            },
+            {
+                path:"carbooking",
+                element: <CarBooking />,
+            },
+            {
+                path:"payment",
+                element: <Payment />,
             },
             {
                 path: "user",
