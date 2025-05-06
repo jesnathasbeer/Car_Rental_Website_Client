@@ -1,6 +1,7 @@
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import carImg from "../../assets/RentACar-img8.jpg";
+import { Link } from "react-router-dom";
 
 const Service = () => {
   return (
@@ -35,9 +36,11 @@ const Service = () => {
         </ul>
 
         <div className="pt-4">
-          <button className="px-6 py-2 text-sm sm:text-base bg-black text-white font-medium hover:bg-gray-800 transition-all">
+           <Link
+  to="/about"
+           className="px-6 py-2 text-sm sm:text-base bg-black text-white font-medium hover:bg-gray-800 transition-all">
             READ MORE
-          </button>
+          </Link>
         </div>
       </div>
 

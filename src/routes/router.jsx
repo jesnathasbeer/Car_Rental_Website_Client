@@ -15,6 +15,7 @@ import Service from "../pages/user/Service";
 import About from "../pages/user/About";
 import CarBooking from "../pages/user/CarBooking";
 import Payment from "../pages/user/Payment";
+import Confirmation from "../pages/user/Confirmation";
 
 const Router = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ const Router = createBrowserRouter([
             {
                 path:"payment",
                 element: <Payment />,
+            },
+            {
+                path:"confirmation",
+                element: <Confirmation />,
             },
             {
                 path: "user",

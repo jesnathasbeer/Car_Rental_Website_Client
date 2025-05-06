@@ -20,7 +20,7 @@ export const CarCards = ({ car }) => {
       </figure>
       <div className="p-5">
         <h2 className="text-xl font-bold text-gray-800 mb-2">{car?.name}</h2>
-        <p className="text-gray-600 mb-4">Price Per Day: <span className="font-semibold">Rs {car?.pricePerDay}</span> /-</p>
+        <p className="text-gray-600 mb-4">Price Per Day: <span className="font-semibold">Rs {car?.priceperday}</span> /-</p>
         <div className="flex justify-end">
           <button
             onClick={() => navigate(`/CarDetails/${car?._id}`)}
