@@ -61,7 +61,7 @@ export const Header = () => {
       {/* Mobile Menu */}
       <div
         id="mobile-menu"
-        className="lg:hidden flex flex-col items-center gap-6 hidden p-4 bg-gray-800 dark:bg-gray-900 rounded-lg shadow-md"
+        className="lg:hidden flex flex-col items-center gap-6 p-4 bg-gray-800 dark:bg-gray-900 rounded-lg shadow-md"
       >
         <Link
           to={"/"}
