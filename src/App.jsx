@@ -1,12 +1,12 @@
 import { RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import Router from "./routes/Router";
+import router from "./routes/router";
 
 
 function App() {
     return (
         <>
-            <RouterProvider router={Router} />
+            <RouterProvider router={router} />
             <Toaster position="top-right" />
         </>
     );

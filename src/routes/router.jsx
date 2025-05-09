@@ -17,7 +17,7 @@ import CarBooking from "../pages/user/CarBooking";
 import Payment from "../pages/user/Payment";
 import Confirmation from "../pages/user/Confirmation";
 
-const Router = createBrowserRouter([
+const router = createBrowserRouter([
     {
         path: "",
         element: <RootLayout />,
@@ -52,7 +52,7 @@ const Router = createBrowserRouter([
                 element: <Cars />,
             },
             {
-                path:"CarDetails/:id",
+                path:"cardetails/:id",
                 element: <CarDetails />,
             },
             {
@@ -77,7 +77,7 @@ const Router = createBrowserRouter([
                     },
                 
                     {
-                        path: "payment",
+                        path: "paymentuser",
                         element: <h1>payment</h1>,
                     },
                 ],
@@ -100,4 +100,4 @@ const Router = createBrowserRouter([
     },
 ]);
 
-export default Router
+export default router

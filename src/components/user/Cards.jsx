@@ -23,7 +23,7 @@ export const CarCards = ({ car }) => {
         <p className="text-gray-600 mb-4">Price Per Day: <span className="font-semibold">Rs {car?.priceperday}</span> /-</p>
         <div className="flex justify-end">
           <button
-            onClick={() => navigate(`/CarDetails/${car?._id}`)}
+            onClick={() => navigate(`/cardetails/${car?._id}`)}
             className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-2 rounded-full font-medium hover:from-indigo-600 hover:to-blue-500 transition-all shadow-md hover:shadow-lg"
           >
             View
