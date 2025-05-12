@@ -8,7 +8,7 @@ import { axiosInstance } from "../config/axiosInstance";
 import { clearUser, saveUser } from "../redux/features/userSlice";
 import { clearAdmin, saveAdmin } from "../redux/features/adminSlice";
 
-export const AdminLayout = () => {
+export const adminLayout = () => {
     const admin = useSelector((state) => state.admin);
     const [isLoading, setIsLoading] = useState(true);
     console.log("admin===", admin);

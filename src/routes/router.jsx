@@ -8,7 +8,6 @@ import { RootLayout } from "../layout/RootLayout";
 import Home from "../pages/user/Home";
 import Contact from "../pages/user/Contact";
 import SignupPage from "../pages/shared/SignupPage";
-import { AdminLayout } from "../layout/AdminLayout";
 import React from "react";
 import { CarDetails } from "../pages/user/CarDetails";
 import Service from "../pages/user/Service";
@@ -16,6 +15,7 @@ import About from "../pages/user/About";
 import CarBooking from "../pages/user/CarBooking";
 import Payment from "../pages/user/Payment";
 import Confirmation from "../pages/user/Confirmation";
+import { adminLayout } from "../layout/adminLayout";
 
 const router = createBrowserRouter([
     {
@@ -86,7 +86,7 @@ const router = createBrowserRouter([
     },
     {
         path: "admin",
-        element: <AdminLayout />,
+        element: <adminLayout />,
         children: [
             {
                 path: "login",
