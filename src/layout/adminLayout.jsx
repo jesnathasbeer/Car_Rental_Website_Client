@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "../components/user/Header";
 import { Footer } from "../components/user/Footer";
 import { Outlet, useLocation } from "react-router-dom";
@@ -6,35 +6,42 @@ import { AdminHeader } from "../components/user/AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../config/axiosInstance";
 import { clearUser, saveUser } from "../redux/features/userSlice";
+import { clearAdmin, saveAdmin } from "../redux/features/adminSlice";
 
 export const AdminLayout = () => {
-    const user = useSelector((state) => state.user);
+    const admin = useSelector((state) => state.admin);
     const [isLoading, setIsLoading] = useState(true);
-    console.log("user===", user);
+    console.log("admin===", admin);
 
     const dispatch = useDispatch();
     const location = useLocation();
 
-    const checkUser = async () => {
+    const checkAdmin = async () => {
         try {
             const response = await axiosInstance({ method: "GET", url: "/admin/check-admin" });
             console.log(response, "========checkAdmin response");
-            dispatch(saveUser());
+            dispatch(saveAdmin(response.data));
             setIsLoading(false);
         } catch (error) {
             console.log(error);
-            dispatch(clearUser());
+            dispatch(clearAdmin());
+        } finally {
             setIsLoading(false)
-        }
+        } 
     };
 
     useEffect(() => {
-        checkUser();
-    }, [location.pathname]);
+        checkAdmin();
+    }, []);
 
-    return isLoading ? null : (
+    console.log("Is admin authenticated:", admin.isAdminAuth);
+    return isLoading ? (
+        <div className="text-center p-4">
+          <span>Loading...</span>
+        </div> 
+        ) : (
         <div>
-            {user.isUserAuth ? <AdminHeader /> : <Header />}
+            {admin.isAdminAuth ? <AdminHeader /> : <Header />}
             <div className="min-h-96">
                 <Outlet />
             </div>
