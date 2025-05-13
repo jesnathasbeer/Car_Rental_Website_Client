@@ -43,7 +43,7 @@ export const RootLayout = () => {
       }, []);
       
       
-    console.log("Is user authenticated:", user.isUserAuth);
+   //   0 console.log("Is use'r authenticated:", user.isUserAuth);
 
     return isLoading ? (
         <div className="flex justify-center items-center h-screen">
