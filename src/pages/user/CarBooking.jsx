@@ -103,16 +103,21 @@ const CarBooking = () => {
           <Link
             to="/payment"
             state={{
-              carName: "Honda City",
-              pricePerDay: 2500,
-              pickupDate: "2025-05-01",
-              returnDate: "2025-05-04",
-              totalAmount: 7500,
+              carName: formData.carModel,
+              pricePerDay: pricePerDay,
+              pickupDate: formData.pickupDate,
+              returnDate: formData.returnDate,
+              totalAmount: totalAmount,
+              pickupLocation: formData.pickupLocation,
+              dropoffLocation: formData.dropoffLocation,
+              name: formData.name,
+              email: formData.email,
             }}
-            className="btn btn-success"
+            className="w-full mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg text-center block"
           >
             Proceed to Payment
           </Link>
+
 
         </form>
       </div>

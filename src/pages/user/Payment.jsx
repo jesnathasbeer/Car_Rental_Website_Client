@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "./PaymentForm";
+
+// Replace with your real publishable key
+const stripePromise = loadStripe("pk_test_51RGJjgPsy14KEODT7e52M60Oi7KkOLxN7WhHsLIeNPTNMIln1Ge1CcoCI2iOSgzZdfWcy0Wb4mDb2nJHepAX2nAs009TAj6shH");
 
 const Payment = () => {
   const location = useLocation();
@@ -13,11 +19,13 @@ const Payment = () => {
     totalAmount,
   } = location.state || {};
 
-  const handlePayment = () => {
-    // TODO: Integrate with real payment gateway
-    alert("Payment Successful!");
-    navigate("/confirmation"); // Navigate to success page
+  const options = {
+    appearance: { theme: "stripe" },
   };
+
+  if (!location.state) {
+    return <p className="text-center mt-10 text-red-600">No booking data found.</p>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center px-4">
@@ -36,38 +44,9 @@ const Payment = () => {
           </p>
         </div>
 
-        {/* Payment Form (Optional fields) */}
-        <div className="space-y-4 mt-6">
-          <input
-            type="text"
-            placeholder="Card Number"
-            className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:text-white"
-          />
-          <input
-            type="text"
-            placeholder="Cardholder Name"
-            className="w-full px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:text-white"
-          />
-          <div className="flex gap-4">
-            <input
-              type="text"
-              placeholder="MM/YY"
-              className="w-1/2 px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:text-white"
-            />
-            <input
-              type="password"
-              placeholder="CVV"
-              className="w-1/2 px-4 py-2 border rounded-lg bg-white dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-        </div>
-
-        <button
-          onClick={handlePayment}
-          className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition"
-        >
-          Pay ₹{totalAmount}
-        </button>
+        <Elements stripe={stripePromise} options={options}>
+          <PaymentForm amount={totalAmount} navigate={navigate} bookingData={location.state} />
+        </Elements>
       </div>
     </div>
   );
