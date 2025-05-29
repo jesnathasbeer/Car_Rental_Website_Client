@@ -40,6 +40,7 @@ const PaymentForm = ({ amount, navigate, bookingData }) => {
       setLoading(false);
       return;
     }
+   
 
     // Step 2: Send booking data and paymentMethodId to backend
     const response = await axiosInstance.post("/order/checkout", {
@@ -74,7 +75,7 @@ const PaymentForm = ({ amount, navigate, bookingData }) => {
         disabled={!stripe || loading}
         className="w-full mt-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition"
       >
-        {loading ? "Processing..." : `Pay ₹${amount}`}
+        {loading ? "Processing..." : `Pay ${amount}`}
       </button>
     </form>
   );

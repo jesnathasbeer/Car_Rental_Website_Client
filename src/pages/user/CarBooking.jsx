@@ -3,8 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 
 const CarBooking = () => {
   const location = useLocation();
+  const carId = location.state?.carId;
   const carName = location.state?.carName || "Selected Car";
-  const pricePerDay = location.state?.pricePerDay || 0;
+  const pricePerDay = Number(location.state?.pricePerDay) || 0;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -14,6 +15,7 @@ const CarBooking = () => {
     pickupLocation: "",
     dropoffLocation: "",
     carModel: carName,
+    carId: carId,
   });
 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -36,6 +38,9 @@ const CarBooking = () => {
       const start = new Date(pickupDate);
       const end = new Date(returnDate);
       const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+
+console.log("Days:", days);
+    console.log("Price Per Day:", pricePerDay);
 
       if (days > 0) {
         setTotalAmount(days * pricePerDay);
@@ -103,6 +108,7 @@ const CarBooking = () => {
           <Link
             to="/payment"
             state={{
+              carId,
               carName: formData.carModel,
               pricePerDay: pricePerDay,
               pickupDate: formData.pickupDate,

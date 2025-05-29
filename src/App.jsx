@@ -12,9 +12,6 @@ function App() {
         <>
             <RouterProvider router={router} />
             <Toaster position="top-right" />
-            <Elements stripe={stripePromise}>
-                <PaymentForm />
-            </Elements>
         </>
     );
 }

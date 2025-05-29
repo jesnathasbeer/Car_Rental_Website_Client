@@ -103,14 +103,15 @@ export const CarDetails = () => {
               <p className={`font-semibold ${carDetails?.available ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                 {carDetails?.available ? "Available" : "Not Available"}
               </p>
-            </div>
+            </div>-
           </div>
 
           <Link
   to="/carbooking"
   state={{
+    carId: carDetails?._id,
     carName: carDetails?.name,
-    pricePerDay: carDetails?.priceperday,
+    pricePerDay: Number(carDetails?.priceperday),
   }}
   title="Proceed to Booking"
   className="inline-block mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition duration-300"
@@ -120,6 +121,7 @@ export const CarDetails = () => {
 
         </div>
       </div>
+      
     </div>
   );
 };
