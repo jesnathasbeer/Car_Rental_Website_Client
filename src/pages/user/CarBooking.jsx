@@ -106,7 +106,7 @@ console.log("Days:", days);
             Confirm Booking
           </button>
           <Link
-            to="/payment"
+            to="/user/payment"
             state={{
               carId,
               carName: formData.carModel,

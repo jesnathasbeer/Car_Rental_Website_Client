@@ -103,11 +103,11 @@ export const CarDetails = () => {
               <p className={`font-semibold ${carDetails?.available ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
                 {carDetails?.available ? "Available" : "Not Available"}
               </p>
-            </div>-
+            </div>
           </div>
 
           <Link
-  to="/carbooking"
+  to="/user/carbooking"
   state={{
     carId: carDetails?._id,
     carName: carDetails?.name,

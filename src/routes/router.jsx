@@ -13,9 +13,10 @@ import { CarDetails } from "../pages/user/CarDetails";
 import Service from "../pages/user/Service";
 import About from "../pages/user/About";
 import CarBooking from "../pages/user/CarBooking";
-import Payment from "../pages/user/Payment";
 import Confirmation from "../pages/user/Confirmation";
-import { adminLayout } from "../layout/adminLayout";
+import { Dashboard } from "../pages/admin/Dashboard";
+import Payment from "../pages/user/Payment";
+import { AdminLayout } from "../layout/adminLayout";
 
 const router = createBrowserRouter([
     {
@@ -56,20 +57,8 @@ const router = createBrowserRouter([
                 element: <CarDetails />,
             },
             {
-                path:"carbooking",
-                element: <CarBooking />,
-            },
-            {
-                path:"payment",
-                element: <Payment />,
-            },
-            {
-                path:"confirmation",
-                element: <Confirmation />,
-            },
-            {
                 path: "user",
-                element: <ProtectRoutes />,
+                element: <ProtectRoutes role="user" />,
                 children: [
                     {
                         path: "profile",
@@ -77,27 +66,45 @@ const router = createBrowserRouter([
                     },
                 
                     {
-                        path: "paymentuser",
-                        element: <h1>payment</h1>,
+                        path:"carbooking",
+                        element: <CarBooking />,
+                    },
+                    {
+                        path:"payment",
+                        element: <Payment />,
+                    },
+                    {
+                        path:"confirmation",
+                        element: <Confirmation />,
                     },
                 ],
             },
         ],
     },
+   {
+  path: "admin",
+  element: <AdminLayout />,
+  children: [
     {
-        path: "admin",
-        element: <adminLayout />,
-        children: [
-            {
-                path: "login",
-                element: <LoginPage role="admin" />,
-            },
-            {
-                path: "signup",
-                element: <SignupPage role="admin" />
-            },
-        ],
+      path: "login",
+      element: <LoginPage role="admin" />,
     },
+    {
+      path: "signup",
+      element: <SignupPage role="admin" />
+    },
+    {
+      element: <ProtectRoutes role="admin" />, // you can conditionally protect admin
+      children: [
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
+      ],
+    }
+  ],
+}
 ]);
+
 
 export default router

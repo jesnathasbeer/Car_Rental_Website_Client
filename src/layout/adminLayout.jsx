@@ -5,10 +5,9 @@ import { Outlet, useLocation } from "react-router-dom";
 import { AdminHeader } from "../components/user/AdminHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "../config/axiosInstance";
-import { clearUser, saveUser } from "../redux/features/userSlice";
 import { clearAdmin, saveAdmin } from "../redux/features/adminSlice";
 
-export const adminLayout = () => {
+export const AdminLayout = () => {
     const admin = useSelector((state) => state.admin);
     const [isLoading, setIsLoading] = useState(true);
     console.log("admin===", admin);
