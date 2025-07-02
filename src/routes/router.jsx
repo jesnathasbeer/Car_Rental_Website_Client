@@ -17,6 +17,7 @@ import Confirmation from "../pages/user/Confirmation";
 import { Dashboard } from "../pages/admin/Dashboard";
 import Payment from "../pages/user/Payment";
 import { AdminLayout } from "../layout/adminLayout";
+import { MyBookings } from "../pages/user/MyBookings";
 
 const router = createBrowserRouter([
     {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
                     {
                         path:"confirmation",
                         element: <Confirmation />,
+                    },
+                    {
+                        path:"mybookings",
+                        element: <MyBookings />,
                     },
                 ],
             },

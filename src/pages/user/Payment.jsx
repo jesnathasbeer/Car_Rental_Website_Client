@@ -1,10 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import { axiosInstance } from "../../config/axiosInstance";
 
-// Replace with your real publishable key
 const stripePromise = loadStripe("pk_test_51RGJjgPsy14KEODT7e52M60Oi7KkOLxN7WhHsLIeNPTNMIln1Ge1CcoCI2iOSgzZdfWcy0Wb4mDb2nJHepAX2nAs009TAj6shH");
 
 const CheckoutForm = ({ bookingData, navigate }) => {
@@ -38,18 +42,24 @@ const CheckoutForm = ({ bookingData, navigate }) => {
         return;
       }
 
-      const response = await axiosInstance.post("/order/checkout", {
+      // Ensure numeric types
+      const finalBookingData = {
         ...bookingData,
         paymentMethodId: paymentMethod.id,
-      });
+        priceperday: Number(bookingData.priceperday),
+        totalAmount: Number(bookingData.totalAmount),
+      };
 
-      navigate("/confirmation", {
+      const response = await axiosInstance.post("/order/checkout", finalBookingData);
+
+      navigate("/user/confirmation", {
         state: {
           ...bookingData,
           totalAmount: response.data.order.totalAmount,
         },
       });
     } catch (error) {
+      console.error("Checkout error:", error);
       setErrorMsg(error.response?.data?.error || "Payment failed");
     }
 
@@ -59,7 +69,18 @@ const CheckoutForm = ({ bookingData, navigate }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="p-4 border rounded-lg bg-white dark:bg-gray-700 dark:text-white">
-        <CardElement />
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "16px",
+                color: "#32325d",
+                "::placeholder": { color: "#aab7c4" },
+              },
+              invalid: { color: "#fa755a" },
+            },
+          }}
+        />
       </div>
 
       {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
@@ -78,14 +99,13 @@ const CheckoutForm = ({ bookingData, navigate }) => {
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const bookingData = location.state || {};
+  const bookingData = location.state;
 
   const options = {
     appearance: { theme: "stripe" },
   };
 
-  if (!location.state) {
+  if (!bookingData) {
     return <p className="text-center mt-10 text-red-600">No booking data found.</p>;
   }
 
@@ -97,9 +117,8 @@ const Payment = () => {
         </h2>
 
         <div className="space-y-2 text-gray-700 dark:text-gray-300">
-          <p><strong>Car ID:</strong> {bookingData.carId}</p>
           <p><strong>Car:</strong> {bookingData.carName}</p>
-          <p><strong>Price/Day:</strong> ₹{bookingData.pricePerDay}</p>
+          <p><strong>Price/Day:</strong> ₹{bookingData.priceperday}</p>
           <p><strong>Pickup Date:</strong> {bookingData.pickupDate}</p>
           <p><strong>Return Date:</strong> {bookingData.returnDate}</p>
           <p className="text-lg font-semibold">

@@ -1,7 +1,8 @@
 import { RouterProvider } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import router from "./routes/router";
 import { loadStripe } from '@stripe/stripe-js';
+import router from "./routes/router";
+
 
 const stripePromise = loadStripe('your_publishable_key');
 function App() {

@@ -12,6 +12,10 @@ const Confirmation = () => {
     totalAmount,
   } = location.state || {};
 
+  if (!location.state) {
+    return <div className="text-center text-red-600 mt-10">No booking data found.</div>;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg text-center max-w-md w-full">

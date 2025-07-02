@@ -31,7 +31,7 @@ export const UserHeader = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/my-learnings" className="hover:text-yellow-600 transition duration-300">
+                <Link to="/user/mybookings" className="hover:text-yellow-600 transition duration-300">
                   My Bookings
                 </Link>
               </li>
@@ -74,7 +74,7 @@ export const UserHeader = () => {
             </Link>
           </li>
           <li>
-            <Link to="/my-learnings" onClick={toggleMenu} className="hover:text-yellow-600 transition duration-300">
+            <Link to="/user/mybookings" onClick={toggleMenu} className="hover:text-yellow-600 transition duration-300">
               My Bookings
             </Link>
           </li>

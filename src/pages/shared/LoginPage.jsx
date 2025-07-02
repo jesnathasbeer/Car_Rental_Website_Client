@@ -72,7 +72,7 @@ export const LoginPage = ({ role }) => {
               {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
             </div>
 
-            {/* Confirm Password */}
+            {/* Confirm Password
             <div className="form-control">
               <label className="label">Confirm Password</label>
               <input
@@ -82,7 +82,7 @@ export const LoginPage = ({ role }) => {
                 placeholder="Re-enter your password"
               />
               {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
-            </div>
+            </div> */}
 
             {/* Links */}
             <div className="flex justify-between text-sm text-primary">

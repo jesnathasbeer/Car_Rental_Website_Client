@@ -111,7 +111,7 @@ export const CarDetails = () => {
   state={{
     carId: carDetails?._id,
     carName: carDetails?.name,
-    pricePerDay: Number(carDetails?.priceperday),
+    priceperday: Number(carDetails?.priceperday),
   }}
   title="Proceed to Booking"
   className="inline-block mt-6 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition duration-300"
