@@ -3,10 +3,12 @@ import { useFetch } from "../../hooks/useFetch";
 import { clearUser } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { 
-  FaUser, FaClipboardList, FaCog, FaCar, 
-  FaCreditCard, FaHeadset, FaSignOutAlt, FaBars 
+import {
+  FaUser, FaClipboardList, FaCog, FaCar,
+  FaCreditCard, FaHeadset, FaSignOutAlt, FaBars
 } from "react-icons/fa";
+import { MyBookings } from "./MyBookings";
+
 
 export const Profile = () => {
   const [userDetails, isLoading, error] = useFetch("/user/profile");
@@ -21,7 +23,14 @@ export const Profile = () => {
     navigate("/");
   };
 
-  if (isLoading) return <p className="text-center text-lg mt-10">Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-base-100">
+        <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary"></div>
+      </div>
+    );
+  }
+
   if (error) return <p className="text-center text-red-500 mt-10">Error loading profile.</p>;
 
   const sidebarItems = [
@@ -35,10 +44,10 @@ export const Profile = () => {
 
   return (
     <div className="min-h-screen flex bg-base-100 text-base-content relative overflow-x-hidden">
-      
+
       {/* Blurred overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={() => setSidebarOpen(false)}
         ></div>
@@ -64,11 +73,10 @@ export const Profile = () => {
                 setActiveTab(item.key);
                 setSidebarOpen(false);
               }}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition ${
-                activeTab === item.key
-                  ? "bg-primary text-primary-content"
-                  : "hover:bg-base-300"
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition ${activeTab === item.key
+                ? "bg-primary text-primary-content"
+                : "hover:bg-base-300"
+                }`}
             >
               <span className="text-lg">{item.icon}</span>
               {item.label}
@@ -87,7 +95,7 @@ export const Profile = () => {
 
       {/* Content */}
       <div className="flex-1 flex flex-col min-h-screen md:ml-64">
-        
+
         {/* Mobile Topbar */}
         <header className="flex items-center justify-between p-4 md:hidden shadow-md bg-base-100">
           <button onClick={() => setSidebarOpen(true)} className="text-2xl">
@@ -129,32 +137,205 @@ export const Profile = () => {
           )}
 
           {activeTab === "bookings" && (
-            <section className="bg-base-200 rounded-2xl p-8 shadow-md space-y-6">
-              <h2 className="text-2xl font-bold mb-4">My Bookings</h2>
-              <p className="text-base text-base-content/80">Your car rental bookings will appear here.</p>
+            <section className="bg-base-200 rounded-2xl p-4 shadow-md">
+              <MyBookings />
             </section>
           )}
+
 
           {activeTab === "payments" && (
             <section className="bg-base-200 rounded-2xl p-8 shadow-md space-y-6">
-              <h2 className="text-2xl font-bold mb-4">Payment Methods</h2>
-              <p className="text-base text-base-content/80">Manage your cards, UPI, and other payment methods.</p>
+              <h2 className="text-2xl font-bold mb-6">My Payment Methods</h2>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Card 1 */}
+                <div className="border p-4 rounded-xl shadow flex items-center justify-between bg-base-100">
+                  <div>
+                    <p className="font-semibold text-base-content">Visa ending in 4242</p>
+                    <p className="text-sm text-gray-500">Expires 12/27</p>
+                  </div>
+                  <button className="text-sm text-error hover:underline">Remove</button>
+                </div>
+
+                {/* Card 2 */}
+                <div className="border p-4 rounded-xl shadow flex items-center justify-between bg-base-100">
+                  <div>
+                    <p className="font-semibold text-base-content">Mastercard ending in 5587</p>
+                    <p className="text-sm text-gray-500">Expires 03/26</p>
+                  </div>
+                  <button className="text-sm text-error hover:underline">Remove</button>
+                </div>
+              </div>
+
+              {/* Add New Payment Method */}
+              <div className="mt-8">
+                <button className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition">
+                  + Add New Payment Method
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 mt-4">
+                Your payment methods are securely handled by <strong>Stripe</strong>.
+              </p>
             </section>
           )}
+
 
           {activeTab === "support" && (
-            <section className="bg-base-200 rounded-2xl p-8 shadow-md space-y-6">
-              <h2 className="text-2xl font-bold mb-4">Support</h2>
-              <p className="text-base text-base-content/80">Need help? Our support team is ready to assist you.</p>
+            <section className="bg-base-200 rounded-2xl p-8 shadow-md space-y-8">
+              <h2 className="text-2xl font-bold">Support Center</h2>
+
+              {/* Contact Methods */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="bg-base-100 p-5 rounded-xl shadow">
+                  <h3 className="text-lg font-semibold text-base-content mb-2">📞 Phone Support</h3>
+                  <p className="text-base-content/80">Call us at <strong>+91 98765 43210</strong></p>
+                  <p className="text-sm text-base-content/60">Mon–Fri, 9 AM – 6 PM IST</p>
+                </div>
+
+                <div className="bg-base-100 p-5 rounded-xl shadow">
+                  <h3 className="text-lg font-semibold text-base-content mb-2">📧 Email Support</h3>
+                  <p className="text-base-content/80">Reach out to us at <strong>support@rentalride.com</strong></p>
+                  <p className="text-sm text-base-content/60">We usually reply within 24 hours.</p>
+                </div>
+              </div>
+
+              {/* Help Form */}
+              <div className="bg-base-100 p-6 rounded-xl shadow">
+                <h3 className="text-lg font-semibold mb-4 text-base-content">Send Us a Message</h3>
+                <form className="space-y-4">
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="input input-bordered w-full"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="input input-bordered w-full"
+                  />
+                  <textarea
+                    placeholder="Describe your issue or question..."
+                    className="textarea textarea-bordered w-full"
+                    rows={4}
+                  ></textarea>
+                  <button type="submit" className="btn btn-primary">
+                    Submit
+                  </button>
+                </form>
+              </div>
+
+              <p className="text-sm text-base-content/50 text-center mt-6">
+                Need urgent help? Call us anytime or email our 24x7 team.
+              </p>
             </section>
           )}
 
+
           {activeTab === "settings" && (
-            <section className="bg-base-200 rounded-2xl p-8 shadow-md space-y-6">
-              <h2 className="text-2xl font-bold mb-4">Settings</h2>
-              <p className="text-base text-base-content/80">Manage your account settings, notifications, and preferences.</p>
+            <section className="bg-base-200 rounded-2xl p-6 md:p-8 shadow-md space-y-4">
+              <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
+
+              {/* 1. Update Profile */}
+              <div className="collapse collapse-arrow bg-base-100">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold">Update Profile</div>
+                <div className="collapse-content space-y-4">
+                  <form className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      defaultValue={userDetails?.name}
+                      className="input input-bordered w-full"
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      defaultValue={userDetails?.email}
+                      className="input input-bordered w-full"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Mobile"
+                      defaultValue={userDetails?.mobile}
+                      className="input input-bordered w-full"
+                    />
+                    <button className="btn btn-primary">Save Changes</button>
+                  </form>
+                </div>
+              </div>
+
+              {/* 2. Change Password */}
+              <div className="collapse collapse-arrow bg-base-100">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold">Change Password</div>
+                <div className="collapse-content space-y-4">
+                  <form className="space-y-4">
+                    <input
+                      type="password"
+                      placeholder="Current Password"
+                      className="input input-bordered w-full"
+                    />
+                    <input
+                      type="password"
+                      placeholder="New Password"
+                      className="input input-bordered w-full"
+                    />
+                    <input
+                      type="password"
+                      placeholder="Confirm New Password"
+                      className="input input-bordered w-full"
+                    />
+                    <button className="btn btn-primary">Update Password</button>
+                  </form>
+                </div>
+              </div>
+
+              {/* 3. Notifications */}
+              <div className="collapse collapse-arrow bg-base-100">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold">Notification Preferences</div>
+                <div className="collapse-content space-y-3">
+                  <label className="label cursor-pointer justify-start gap-4">
+                    <input type="checkbox" className="checkbox checkbox-primary" defaultChecked />
+                    <span className="label-text">Booking confirmations</span>
+                  </label>
+                  <label className="label cursor-pointer justify-start gap-4">
+                    <input type="checkbox" className="checkbox checkbox-primary" />
+                    <span className="label-text">Promotional offers</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* 4. Dark Mode Toggle */}
+              <div className="collapse collapse-arrow bg-base-100">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold">Theme</div>
+                <div className="collapse-content flex items-center justify-between">
+                  <p className="font-medium">Dark Mode</p>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-primary"
+                    onChange={() => document.documentElement.classList.toggle("dark")}
+                  />
+                </div>
+              </div>
+
+              {/* 5. Deactivate Account */}
+              <div className="collapse collapse-arrow bg-base-100">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-semibold text-error">Deactivate Account</div>
+                <div className="collapse-content space-y-4">
+                  <p className="text-sm text-base-content/70">
+                    This action will permanently delete your account and all associated data.
+                  </p>
+                  <button className="btn btn-error">Deactivate Account</button>
+                </div>
+              </div>
             </section>
           )}
+
+
         </main>
       </div>
 
