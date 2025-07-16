@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { clearUser } from "../../redux/features/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -8,20 +8,144 @@ import {
   FaCreditCard, FaHeadset, FaSignOutAlt, FaBars
 } from "react-icons/fa";
 import { MyBookings } from "./MyBookings";
-
+import { axiosInstance } from "../../config/axiosInstance";
+import { useTheme } from "../../context/ThemeContext";
 
 export const Profile = () => {
   const [userDetails, isLoading, error] = useFetch("/user/profile");
   const [activeTab, setActiveTab] = useState("profile");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileForm, setProfileForm] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+  });
+  const [profileImage, setProfileImage] = useState(null);
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordMsg, setPasswordMsg] = useState({ success: "", error: "" });
+
+  const [isSaving, setIsSaving] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userDetails) {
+      setProfileForm({
+        name: userDetails.name || "",
+        email: userDetails.email || "",
+        mobile: userDetails.mobile || "",
+        profilePic: userDetails.image || ""
+      });
+    }
+  }, [userDetails]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(clearUser());
     navigate("/");
   };
+
+  const handleDeactivateAccount = async () => {
+    const confirm = window.confirm(
+      "Are you sure you want to deactivate your account? This action is irreversible."
+    );
+
+    if (!confirm) return;
+
+    try {
+      const res = await axiosInstance.put("/user/deactivate-user");
+
+      // Clear local session
+      localStorage.removeItem("token");
+      dispatch(clearUser());
+
+      // Redirect to homepage or a goodbye page
+      navigate("/");
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to deactivate account.");
+    }
+  };
+
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setProfileForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    setSuccessMsg("");
+    setErrorMsg("");
+
+    try {
+      const formData = new FormData();
+      formData.append("name", profileForm.name);
+      formData.append("email", profileForm.email);
+      formData.append("mobile", profileForm.mobile);
+      if (profileImage) {
+        formData.append("image", profileImage);
+      }
+
+      const res = await axiosInstance.put("/user/update-profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setSuccessMsg("Profile updated successfully.");
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordMsg({ success: "", error: "" });
+
+    const { currentPassword, newPassword, confirmPassword } = passwordForm;
+
+    if (newPassword !== confirmPassword) {
+      return setPasswordMsg({ success: "", error: "Passwords do not match." });
+    }
+
+    try {
+      const res = await axiosInstance.post("/user/change-password", {
+        currentPassword,
+        newPassword,
+      });
+
+      setPasswordMsg({ success: "Password updated successfully!", error: "" });
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err) {
+      setPasswordMsg({
+        success: "",
+        error: err.response?.data?.message || "Failed to change password.",
+      });
+    }
+  };
+
+
+  const { darkMode, setDarkMode } = useTheme();
+
 
   if (isLoading) {
     return (
@@ -237,30 +361,28 @@ export const Profile = () => {
               <h2 className="text-2xl font-bold mb-4">Account Settings</h2>
 
               {/* 1. Update Profile */}
+
               <div className="collapse collapse-arrow bg-base-100">
                 <input type="checkbox" />
                 <div className="collapse-title text-lg font-semibold">Update Profile</div>
                 <div className="collapse-content space-y-4">
-                  <form className="space-y-4">
+                  <form className="space-y-4" onSubmit={handleProfileUpdate}>
+                    <input type="text" name="name" placeholder="Full Name" value={profileForm.name} onChange={handleProfileChange} className="input input-bordered w-full" />
+                    <input type="email" name="email" placeholder="Email" value={profileForm.email} onChange={handleProfileChange} className="input input-bordered w-full" />
+                    <input type="text" name="mobile" placeholder="Mobile" value={profileForm.mobile} onChange={handleProfileChange} className="input input-bordered w-full" />
                     <input
-                      type="text"
-                      placeholder="Full Name"
-                      defaultValue={userDetails?.name}
-                      className="input input-bordered w-full"
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="file-input file-input-bordered w-full"
                     />
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      defaultValue={userDetails?.email}
-                      className="input input-bordered w-full"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Mobile"
-                      defaultValue={userDetails?.mobile}
-                      className="input input-bordered w-full"
-                    />
-                    <button className="btn btn-primary">Save Changes</button>
+
+                    <button className="btn btn-primary" type="submit" disabled={isSaving}>
+                      {isSaving ? "Saving..." : "Save Changes"}
+                    </button>
+                    {successMsg && <p className="text-green-500">{successMsg}</p>}
+                    {errorMsg && <p className="text-red-500">{errorMsg}</p>}
                   </form>
                 </div>
               </div>
@@ -270,24 +392,39 @@ export const Profile = () => {
                 <input type="checkbox" />
                 <div className="collapse-title text-lg font-semibold">Change Password</div>
                 <div className="collapse-content space-y-4">
-                  <form className="space-y-4">
+                  <form className="space-y-4" onSubmit={handlePasswordSubmit}>
                     <input
                       type="password"
+                      name="currentPassword"
                       placeholder="Current Password"
+                      value={passwordForm.currentPassword}
+                      onChange={handlePasswordChange}
                       className="input input-bordered w-full"
+                      required
                     />
                     <input
                       type="password"
+                      name="newPassword"
                       placeholder="New Password"
+                      value={passwordForm.newPassword}
+                      onChange={handlePasswordChange}
                       className="input input-bordered w-full"
+                      required
                     />
                     <input
                       type="password"
+                      name="confirmPassword"
                       placeholder="Confirm New Password"
+                      value={passwordForm.confirmPassword}
+                      onChange={handlePasswordChange}
                       className="input input-bordered w-full"
+                      required
                     />
-                    <button className="btn btn-primary">Update Password</button>
+                    <button className="btn btn-primary" type="submit">Update Password</button>
+                    {passwordMsg.success && <p className="text-green-500">{passwordMsg.success}</p>}
+                    {passwordMsg.error && <p className="text-red-500">{passwordMsg.error}</p>}
                   </form>
+
                 </div>
               </div>
 
@@ -316,8 +453,10 @@ export const Profile = () => {
                   <input
                     type="checkbox"
                     className="toggle toggle-primary"
-                    onChange={() => document.documentElement.classList.toggle("dark")}
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
                   />
+
                 </div>
               </div>
 
@@ -329,7 +468,10 @@ export const Profile = () => {
                   <p className="text-sm text-base-content/70">
                     This action will permanently delete your account and all associated data.
                   </p>
-                  <button className="btn btn-error">Deactivate Account</button>
+                  <button className="btn btn-error" onClick={handleDeactivateAccount}>
+                    Deactivate Account
+                  </button>
+
                 </div>
               </div>
             </section>

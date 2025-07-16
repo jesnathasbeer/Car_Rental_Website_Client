@@ -72,18 +72,6 @@ export const LoginPage = ({ role }) => {
               {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
             </div>
 
-            {/* Confirm Password
-            <div className="form-control">
-              <label className="label">Confirm Password</label>
-              <input
-                type="password"
-                {...register("confirmPassword", { required: "Confirm your password" })}
-                className="input input-bordered w-full"
-                placeholder="Re-enter your password"
-              />
-              {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
-            </div> */}
-
             {/* Links */}
             <div className="flex justify-between text-sm text-primary">
               <Link to="#" className="hover:underline">Forgot password?</Link>
@@ -91,7 +79,7 @@ export const LoginPage = ({ role }) => {
             </div>
 
             {/* Submit */}
-            <button type="submit" className="btn btn-primary w-full">
+            <button type="submit" className="btn w-full bg-yellow-400 hover:bg-yellow-500 text-white border-none">
               Login
             </button>
           </form>

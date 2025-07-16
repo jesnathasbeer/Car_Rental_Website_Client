@@ -135,7 +135,7 @@ const SignupPage = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               type="submit"
-              className="btn btn-primary w-full"
+              className="btn w-full bg-yellow-400 hover:bg-yellow-500 text-white border-none"
             >
               Sign Up
             </motion.button>
