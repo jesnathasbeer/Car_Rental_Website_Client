@@ -88,11 +88,36 @@ const CarBooking = () => {
           <input type="email" name="email" placeholder="Email Address" required value={formData.email} onChange={handleChange}
             className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" />
 
-          <input type="date" name="pickupDate" required value={formData.pickupDate} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" />
+          <div>
+            <label htmlFor="pickupDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Pickup Date
+            </label>
+            <input
+              type="date"
+              name="pickupDate"
+              id="pickupDate"
+              required
+              value={formData.pickupDate}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+            />
+          </div>
 
-          <input type="date" name="returnDate" required value={formData.returnDate} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" />
+          <div className="relative">
+            <label htmlFor="returnDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Return Date
+            </label>
+            <input
+              type="date"
+              name="returnDate"
+              id="returnDate"
+              required
+              value={formData.returnDate}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+            />
+          </div>
+
 
           <select name="pickupLocation" required value={formData.pickupLocation} onChange={handleChange}
             className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { clearUser, saveUser } from "../../redux/features/userSlice";
 import loginIllustration from "../../assets/RentACar-img9.jpg";
 import toast from "react-hot-toast";
+import { clearAdmin, saveAdmin } from "../../redux/features/adminSlice";
 
 export const LoginPage = ({ role }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -19,18 +20,29 @@ export const LoginPage = ({ role }) => {
     signupRoute: role === "admin" ? "/admin/signup" : "/signup",
   };
 
-  const onSubmit = async (data) => {
-    try {
-      const response = await axiosInstance.put(user.loginAPI, data);
+ const onSubmit = async (data) => {
+  try {
+    const response = await axiosInstance.put(user.loginAPI, data);
+
+    if (user.role === "admin") {
+      dispatch(saveAdmin(response?.data?.data));
+    } else {
       dispatch(saveUser(response?.data?.data));
-      toast.success("Login successful!");
-      navigate(user.profileRoute);
-    } catch (error) {
-      dispatch(clearUser());
-      toast.error("Login failed. Please check your credentials.");
-      console.error("Login failed:", error);
     }
-  };
+
+    toast.success("Login successful!");
+    navigate(user.profileRoute);
+  } catch (error) {
+    if (user.role === "admin") {
+      dispatch(clearAdmin());
+    } else {
+      dispatch(clearUser());
+    }
+    toast.error("Login failed. Please check your credentials.");
+    console.error("Login failed:", error);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
@@ -74,7 +86,7 @@ export const LoginPage = ({ role }) => {
 
             {/* Links */}
             <div className="flex justify-between text-sm text-primary">
-              <Link to="#" className="hover:underline">Forgot password?</Link>
+              <Link to="/forgot-password" className="hover:underline">Forgot password?</Link>
               <Link to={user.signupRoute} className="hover:underline">New user? Sign Up</Link>
             </div>
 

@@ -18,6 +18,8 @@ import { Dashboard } from "../pages/admin/Dashboard";
 import Payment from "../pages/user/Payment";
 import { AdminLayout } from "../layout/adminLayout";
 import { MyBookings } from "../pages/user/MyBookings";
+// import { ForgotPassword } from "../pages/auth/ForgotPassword";
+
 
 const router = createBrowserRouter([
     {
@@ -33,11 +35,11 @@ const router = createBrowserRouter([
                 path: "service",
                 element: <Service />
             },
-             {
-                 path: "contact",
-                 element: <Contact />,
-             },
-             {
+            {
+                path: "contact",
+                element: <Contact />,
+            },
+            {
                 path: "about",
                 element: <About />,
             },
@@ -49,12 +51,20 @@ const router = createBrowserRouter([
                 path: "signup",
                 element: <SignupPage />,
             },
+            // {
+            //     path: "forgot-password",
+            //     element: <ForgotPassword />,
+            // },
+            // {
+            //     path: "reset-password/:token",
+            //     element: <ResetPassword />,
+            // },
             {
                 path: "cars",
                 element: <Cars />,
             },
             {
-                path:"cardetails/:id",
+                path: "cardetails/:id",
                 element: <CarDetails />,
             },
             {
@@ -65,50 +75,50 @@ const router = createBrowserRouter([
                         path: "profile",
                         element: <Profile />,
                     },
-                
+
                     {
-                        path:"carbooking",
+                        path: "carbooking",
                         element: <CarBooking />,
                     },
                     {
-                        path:"payment",
+                        path: "payment",
                         element: <Payment />,
                     },
                     {
-                        path:"confirmation",
+                        path: "confirmation",
                         element: <Confirmation />,
                     },
                     {
-                        path:"mybookings",
+                        path: "mybookings",
                         element: <MyBookings />,
                     },
                 ],
             },
         ],
     },
-   {
-  path: "admin",
-  element: <AdminLayout />,
-  children: [
     {
-      path: "login",
-      element: <LoginPage role="admin" />,
-    },
-    {
-      path: "signup",
-      element: <SignupPage role="admin" />
-    },
-    {
-      element: <ProtectRoutes role="admin" />, // you can conditionally protect admin
-      children: [
-        {
-          path: "dashboard",
-          element: <Dashboard />,
-        },
-      ],
+        path: "admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "login",
+                element: <LoginPage role="admin" />,
+            },
+            {
+                path: "signup",
+                element: <SignupPage role="admin" />
+            },
+            {
+                element: <ProtectRoutes role="admin" />, // you can conditionally protect admin
+                children: [
+                    {
+                        path: "profile",
+                        element: <Dashboard />,
+                    },
+                ],
+            }
+        ],
     }
-  ],
-}
 ]);
 
 
