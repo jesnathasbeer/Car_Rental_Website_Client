@@ -7,41 +7,62 @@ import {
   FaDollarSign,
   FaPowerOff,
   FaUserSlash,
+  FaTachometerAlt,
+  FaBars,
+  FaChevronLeft,
+  FaChevronRight
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext";
+import { axiosInstance } from "../../config/axiosInstance";
 
 export const Dashboard = () => {
   const [stats, setStats] = useState({});
   const [users, setUsers] = useState([]);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { darkMode } = useTheme();
+
+  useEffect(() => {
   const fetchStats = async () => {
     try {
-      const res = await axios.get("/admin/stats");
+      const res = await axiosInstance.get("/admin/stats", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+      });
+      console.log("Stats:", res.data.data); // Debug log
       setStats(res.data?.data || {});
-    } catch (err) {
-      console.error("Failed to fetch dashboard stats:", err);
+    } catch (error) {
+      console.error("Error fetching stats", error);
     }
   };
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("/admin/users"); // backend: return all users
+      const res = await axiosInstance.get("/admin/users", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+      });
       setUsers(res.data?.data || []);
-    } catch (err) {
-      console.error("Failed to fetch users:", err);
+    } catch (error) {
+      console.error("Error fetching users", error);
     }
   };
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      await Promise.all([fetchStats(), fetchUsers()]);
-      setLoading(false);
-    };
-    fetchAll();
-  }, []);
+  const loadAll = async () => {
+    await Promise.all([fetchStats(), fetchUsers()]);
+    setLoading(false);
+  };
+
+  loadAll();
+}, []);
 
   const logout = async () => {
     try {
@@ -54,9 +75,10 @@ export const Dashboard = () => {
 
   const deactivateAccount = async () => {
     try {
-      const res = await axios.put("/admin/deactivate", {
-        email: users.find(u => u.role === "admin")?.email,
-      });
+      const admin = users.find((u) => u.role === "admin");
+      if (!admin) return;
+
+      const res = await axios.put("/admin/deactivate", { email: admin.email });
       alert(res.data.message);
       logout();
     } catch (err) {
@@ -69,106 +91,143 @@ export const Dashboard = () => {
     try {
       const res = await axios.put("/user/deactivate", { email: selectedUserEmail });
       alert(res.data.message);
-      fetchUsers(); // refresh user list
+      setSelectedUserEmail("");
+      const refreshed = await axios.get("/admin/users");
+      setUsers(refreshed.data?.data || []);
     } catch (err) {
       console.error("User deactivation failed", err);
     }
   };
 
-  if (loading) {
-    return <div className="p-8 text-gray-700 dark:text-gray-200">Loading dashboard...</div>;
-  }
-
   const { totalCars = 0, totalUsers = 0, totalBookings = 0, totalRevenue = 0 } = stats;
 
-  const cards = [
-    {
-      label: "Total Cars",
-      value: totalCars,
-      icon: <FaCar size={24} className="text-blue-600" />,
-      bg: "bg-blue-100 dark:bg-blue-900",
-    },
-    {
-      label: "Total Users",
-      value: totalUsers,
-      icon: <FaUsers size={24} className="text-green-600" />,
-      bg: "bg-green-100 dark:bg-green-900",
-    },
-    {
-      label: "Bookings",
-      value: totalBookings,
-      icon: <FaClipboardList size={24} className="text-purple-600" />,
-      bg: "bg-purple-100 dark:bg-purple-900",
-    },
-    {
-      label: "Revenue",
-      value: `$${totalRevenue.toLocaleString()}`,
-      icon: <FaDollarSign size={24} className="text-yellow-600" />,
-      bg: "bg-yellow-100 dark:bg-yellow-900",
-    },
+  const navLinks = [
+    { label: "Dashboard", path: "/admin/dashboard", icon: <FaTachometerAlt /> },
+    { label: "Users", path: "/admin/users", icon: <FaUsers /> },
   ];
 
-  return (
-    <div className="p-6 md:p-10 space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Admin Dashboard</h1>
-        <button
-          onClick={logout}
-          className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded flex items-center gap-2"
-        >
-          <FaPowerOff /> Logout
-        </button>
-      </div>
+  const contentShift = isCollapsed ? "md:ml-[80px]" : "md:ml-[260px]";
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {cards.map((card, idx) => (
-          <div
-            key={idx}
-            className={`rounded-2xl shadow-lg hover:shadow-xl transition duration-300 p-6 flex items-center gap-4 ${card.bg}`}
+  if (loading) return <div className="p-8 text-base-content">Loading dashboard...</div>;
+
+  return (
+    <div className="min-h-screen flex bg-base-100 text-base-content relative overflow-x-hidden">
+
+      {/* Backdrop for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-full bg-base-200 shadow-lg z-50 p-4 transition-all duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+          md:translate-x-0 ${isCollapsed ? "md:w-[80px]" : "md:w-[260px]"}`}
+      >
+        <div className="flex justify-between items-center mb-6">
+          <h2 className={`text-2xl font-bold text-primary transition-all ${isCollapsed ? "hidden" : ""}`}>
+            Admin
+          </h2>
+          <button className="md:hidden text-xl" onClick={() => setSidebarOpen(false)}>✖️</button>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="hidden md:inline-block text-lg text-base-content"
           >
-            <div className="p-3 rounded-full bg-white dark:bg-gray-800 shadow">{card.icon}</div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                {card.label}
-              </h3>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{card.value}</p>
+            {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-2">
+          {navLinks.map((link) => (
+            <button
+              key={link.path}
+              onClick={() => navigate(link.path)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition
+                ${location.pathname === link.path
+                  ? "bg-primary text-primary-content"
+                  : "hover:bg-base-300"}
+                ${isCollapsed ? "justify-center" : ""}`}
+            >
+              <span className="text-lg">{link.icon}</span>
+              {!isCollapsed && <span>{link.label}</span>}
+            </button>
+          ))}
+          <button
+            onClick={logout}
+            className={`mt-4 flex items-center gap-3 px-4 py-3 text-error hover:bg-error/20 rounded-lg transition
+              ${isCollapsed ? "justify-center" : ""}`}
+          >
+            <FaPowerOff className="text-lg" />
+            {!isCollapsed && "Logout"}
+          </button>
+        </nav>
+      </aside>
+
+      {/* Content */}
+      <div className={`flex-1 flex flex-col ${contentShift}`}>
+        {/* Mobile Topbar */}
+        <header className="md:hidden flex items-center justify-between p-4 bg-base-100 shadow">
+          <button onClick={() => setSidebarOpen(true)} className="text-xl"><FaBars /></button>
+          <h1 className="text-xl font-bold text-primary">Admin Dashboard</h1>
+          <div></div>
+        </header>
+
+        {/* Main Section */}
+        <main className="p-6 md:p-10 space-y-8">
+          <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { label: "Total Cars", value: totalCars, icon: <FaCar />, color: "bg-blue-100" },
+              { label: "Users", value: totalUsers, icon: <FaUsers />, color: "bg-green-100" },
+              { label: "Bookings", value: totalBookings, icon: <FaClipboardList />, color: "bg-purple-100" },
+              { label: "Revenue", value: `$${totalRevenue.toLocaleString()}`, icon: <FaDollarSign />, color: "bg-yellow-100" },
+            ].map((card, i) => (
+              <div
+                key={i}
+                className={`rounded-2xl p-6 shadow hover:shadow-xl transition flex items-center gap-4 bg-base-200`}
+              >
+                <div className="p-3 rounded-full bg-base-100 shadow text-xl">{card.icon}</div>
+                <div>
+                  <h3 className="text-sm font-semibold">{card.label}</h3>
+                  <p className="text-2xl font-bold">{card.value}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="space-y-4">
+            <button
+              onClick={deactivateAccount}
+              className="btn btn-error text-white flex items-center gap-2"
+            >
+              <FaUserSlash /> Deactivate Admin Account
+            </button>
+
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
+              <select
+                className="select select-bordered w-full sm:w-64"
+                value={selectedUserEmail}
+                onChange={(e) => setSelectedUserEmail(e.target.value)}
+              >
+                <option value="">Select user to deactivate</option>
+                {users.filter((u) => u.role !== "admin").map((u) => (
+                  <option key={u._id} value={u.email}>{u.name} ({u.email})</option>
+                ))}
+              </select>
+              <button
+                onClick={deactivateUser}
+                className="btn btn-warning text-white"
+              >
+                Deactivate User
+              </button>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={deactivateAccount}
-            className="bg-gray-800 hover:bg-gray-900 text-white font-semibold px-4 py-2 rounded flex items-center gap-2"
-          >
-            <FaUserSlash /> Deactivate My Admin Account
-          </button>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-start">
-          <select
-            className="border px-4 py-2 rounded"
-            value={selectedUserEmail}
-            onChange={(e) => setSelectedUserEmail(e.target.value)}
-          >
-            <option value="">Select a user to deactivate</option>
-            {users
-              .filter((u) => u.role !== "admin")
-              .map((user) => (
-                <option key={user._id} value={user.email}>
-                  {user.name} ({user.email})
-                </option>
-              ))}
-          </select>
-          <button
-            onClick={deactivateUser}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded"
-          >
-            Deactivate User
-          </button>
-        </div>
+        </main>
       </div>
     </div>
   );
