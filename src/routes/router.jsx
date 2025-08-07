@@ -18,6 +18,7 @@ import { Dashboard } from "../pages/admin/Dashboard";
 import Payment from "../pages/user/Payment";
 import { AdminLayout } from "../layout/adminLayout";
 import { MyBookings } from "../pages/user/MyBookings";
+import AdminUsers from "../pages/admin/AdminUsers";
 // import { ForgotPassword } from "../pages/auth/ForgotPassword";
 
 
@@ -115,6 +116,9 @@ const router = createBrowserRouter([
                         path: "profile",
                         element: <Dashboard />,
                     },
+                    { path: "users",
+                      element: <AdminUsers />,
+                    }, 
                 ],
             }
         ],

@@ -21,7 +21,7 @@ export const AdminHeader = () => {
           <nav>
             <ul className="flex justify-center items-center gap-10 font-bold text-md">
               <li>
-                <Link to="/admin/dashboard" className="hover:text-yellow-600 transition duration-300">
+                <Link to="/admin/profile" className="hover:text-yellow-600 transition duration-300">
                   Dashboard
                 </Link>
               </li>
@@ -66,7 +66,7 @@ export const AdminHeader = () => {
               <ul className="flex flex-col gap-4 font-bold text-md">
                 <li>
                   <Link
-                    to="/admin/dashboard"
+                    to="/admin/profile"
                     onClick={toggleMenu}
                     className="hover:text-yellow-600 transition duration-300"
                   >

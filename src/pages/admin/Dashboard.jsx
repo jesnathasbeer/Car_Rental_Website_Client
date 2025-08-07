@@ -89,7 +89,7 @@ export const Dashboard = () => {
   const deactivateUser = async () => {
     if (!selectedUserEmail) return alert("Select a user");
     try {
-      const res = await axios.put("/user/deactivate", { email: selectedUserEmail });
+      const res = await axiosInstance.put("/user/deactivate-user", { email: selectedUserEmail });
       alert(res.data.message);
       setSelectedUserEmail("");
       const refreshed = await axios.get("/admin/users");
@@ -102,7 +102,7 @@ export const Dashboard = () => {
   const { totalCars = 0, totalUsers = 0, totalBookings = 0, totalRevenue = 0 } = stats;
 
   const navLinks = [
-    { label: "Dashboard", path: "/admin/dashboard", icon: <FaTachometerAlt /> },
+    { label: "Dashboard", path: "/admin/profile", icon: <FaTachometerAlt /> },
     { label: "Users", path: "/admin/users", icon: <FaUsers /> },
   ];
 
