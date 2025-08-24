@@ -8,7 +8,6 @@ import { saveUser } from "../../redux/features/userSlice";
 import { useDispatch } from "react-redux";
 import carImage from "../../assets/login-car-image.png";
 import { useTheme } from "../../context/ThemeContext"; 
-import defaultAvatar from "../../assets/user.jpg";
 
 const SignupPage = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
@@ -24,8 +23,6 @@ const SignupPage = () => {
     // ✅ append uploaded image OR fallback to default avatar
     if (image) {
       formData.append("image", image);
-    } else {
-      formData.append("image", defaultAvatar); 
     }
 
     try {
