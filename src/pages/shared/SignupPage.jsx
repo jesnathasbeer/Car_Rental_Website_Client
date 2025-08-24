@@ -7,28 +7,38 @@ import { axiosInstance } from "../../config/axiosInstance";
 import { saveUser } from "../../redux/features/userSlice";
 import { useDispatch } from "react-redux";
 import carImage from "../../assets/login-car-image.png";
-import { useTheme } from "../../context/ThemeContext"; // ✅ for theme toggle
+import { useTheme } from "../../context/ThemeContext";
+import toast from "react-hot-toast"; // ✅ feedback
 
 const SignupPage = () => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { darkMode } = useTheme(); // ✅ detect theme (default = dark)
+  const { darkMode } = useTheme();
   const [image, setImage] = React.useState(null);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
     for (const key in data) formData.append(key, data[key]);
-    if (image) formData.append("image", image);
+    if (image) formData.append("image", image); // ✅ backend expects "image"
 
     try {
       const response = await axiosInstance.post("/user/signup", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       dispatch(saveUser(response.data.data));
+      toast.success("Signup successful 🎉");
       navigate("/user/profile");
     } catch (error) {
       console.error("Signup failed:", error);
+      const msg = error.response?.data?.message || "Signup failed. Try again!";
+      toast.error(msg);
     }
   };
 
@@ -112,13 +122,16 @@ const SignupPage = () => {
                   type="password"
                   {...register("confirmPassword", {
                     required: "Confirm your password",
-                    validate: (value) => value === watch("password") || "Passwords do not match",
+                    validate: (value) =>
+                      value === watch("password") || "Passwords do not match",
                   })}
                   placeholder="Confirm Password"
                   className="input input-bordered w-full pl-10"
                 />
               </div>
-              {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && (
+                <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
             {/* Profile Image */}
@@ -126,7 +139,7 @@ const SignupPage = () => {
               <label className="label">Profile Image</label>
               <input
                 type="file"
-                name="image"
+                accept="image/*"
                 onChange={(e) => setImage(e.target.files[0])}
                 className="file-input file-input-bordered w-full"
               />
