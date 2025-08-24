@@ -14,21 +14,12 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { darkMode } = useTheme();
-  const [image, setImage] = React.useState(null);
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-    for (const key in data) formData.append(key, data[key]);
-
-    // ✅ append uploaded image OR fallback to default avatar
-    if (image) {
-      formData.append("image", image);
-    }
-
     try {
-      const response = await axiosInstance.post("/user/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // ✅ just send plain JSON — backend handles default image
+      const response = await axiosInstance.post("/user/signup", data);
+
       dispatch(saveUser(response.data.data));
       navigate("/user/profile");
     } catch (error) {
@@ -125,16 +116,8 @@ const SignupPage = () => {
               {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
             </div>
 
-            {/* Profile Image */}
-            <div className="form-control">
-              <label className="label">Profile Image</label>
-              <input
-                type="file"
-                name="image"
-                onChange={(e) => setImage(e.target.files[0])}
-                className="file-input file-input-bordered w-full"
-              />
-            </div>
+            {/* Remove profile image input for now, since backend handles default */}
+            {/* If in future you want file upload → use Cloudinary direct upload */}
 
             {/* Submit */}
             <motion.button
