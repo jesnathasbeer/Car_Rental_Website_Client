@@ -159,7 +159,7 @@ export const Profile = () => {
 
   const sidebarItems = [
     { key: "profile", label: "Profile", icon: <FaUser /> },
-    { key: "orders", label: "My Orders", icon: <FaClipboardList /> },
+    // { key: "orders", label: "My Orders", icon: <FaClipboardList /> },
     { key: "bookings", label: "My Bookings", icon: <FaCar /> },
     { key: "payments", label: "Payment Methods", icon: <FaCreditCard /> },
     { key: "support", label: "Support", icon: <FaHeadset /> },

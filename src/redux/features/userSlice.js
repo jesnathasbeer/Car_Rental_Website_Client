@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     userData: {},
-    isUserAuth: true,
+    isUserAuth: false,
 };
 
 export const userSlice = createSlice({
@@ -20,7 +20,5 @@ export const userSlice = createSlice({
     },
 });
 
-// Action creators are generated for each case reducer function
 export const { saveUser, clearUser } = userSlice.actions;
-
 export default userSlice.reducer;

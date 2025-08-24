@@ -19,6 +19,10 @@ import Payment from "../pages/user/Payment";
 import { AdminLayout } from "../layout/adminLayout";
 import { MyBookings } from "../pages/user/MyBookings";
 import AdminUsers from "../pages/admin/AdminUsers";
+import { AddCar } from "../pages/admin/AddCar";
+import AdminCars from "../pages/admin/AdminCars";
+import EditCar from "../pages/admin/EditCar";
+
 // import { ForgotPassword } from "../pages/auth/ForgotPassword";
 
 
@@ -119,6 +123,15 @@ const router = createBrowserRouter([
                     { path: "users",
                       element: <AdminUsers />,
                     }, 
+                    { path: "addcar",
+                      element: <AddCar />,
+                    },
+                    { path : "cars" ,
+                      element: <AdminCars />,
+                    },
+                    { path : "editcar/:id" ,
+                      element : <EditCar />,
+                    },
                 ],
             }
         ],

@@ -34,10 +34,10 @@ const Confirmation = () => {
         </div>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/user/profile")}
           className="mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg transition"
         >
-          Back to Home
+          Back to Profile
         </button>
       </div>
     </div>

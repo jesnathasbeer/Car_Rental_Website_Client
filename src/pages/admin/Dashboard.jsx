@@ -10,11 +10,14 @@ import {
   FaTachometerAlt,
   FaBars,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
+  FaPlusCircle
 } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
 import { axiosInstance } from "../../config/axiosInstance";
+import { useDispatch } from "react-redux";
+import { clearAdmin } from "../../redux/features/adminSlice";
 
 export const Dashboard = () => {
   const [stats, setStats] = useState({});
@@ -27,83 +30,117 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { darkMode } = useTheme();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-  const fetchStats = async () => {
-    try {
-      const res = await axiosInstance.get("/admin/stats", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
-      });
-      console.log("Stats:", res.data.data); // Debug log
-      setStats(res.data?.data || {});
-    } catch (error) {
-      console.error("Error fetching stats", error);
-    }
+    const fetchStats = async () => {
+      try {
+        const res = await axiosInstance.get("/admin/stats", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        });
+        console.log("Stats:", res.data.data); // Debug log
+        setStats(res.data?.data || {});
+      } catch (error) {
+        console.error("Error fetching stats", error);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const res = await axiosInstance.get("/admin/users", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        });
+        setUsers(res.data?.data || []);
+      } catch (error) {
+        console.error("Error fetching users", error);
+      }
+    };
+
+    const loadAll = async () => {
+      await Promise.all([fetchStats(), fetchUsers()]);
+      setLoading(false);
+    };
+
+    loadAll();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    dispatch(clearAdmin());
+    navigate("/"); // ✅ Go to main site home page
   };
 
-  const fetchUsers = async () => {
-    try {
-      const res = await axiosInstance.get("/admin/users", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
-      });
-      setUsers(res.data?.data || []);
-    } catch (error) {
-      console.error("Error fetching users", error);
-    }
-  };
 
-  const loadAll = async () => {
-    await Promise.all([fetchStats(), fetchUsers()]);
-    setLoading(false);
-  };
+  // --- inside Dashboard.jsx ---
 
-  loadAll();
-}, []);
-
-  const logout = async () => {
-    try {
-      await axios.get("/admin/logout");
-      navigate("/admin/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  };
-
+  // ✅ Deactivate Admin Account
   const deactivateAccount = async () => {
     try {
       const admin = users.find((u) => u.role === "admin");
-      if (!admin) return;
+      if (!admin) return alert("No admin found");
 
-      const res = await axios.put("/admin/deactivate", { email: admin.email });
+      const res = await axiosInstance.put("/user/deactivate-user", { email: admin.email });
       alert(res.data.message);
-      logout();
+
+      handleLogout(); // logout after deactivation
     } catch (err) {
       console.error("Admin deactivation failed", err);
+      alert("Admin deactivation failed");
     }
   };
 
+  // ✅ Deactivate Normal User
   const deactivateUser = async () => {
-    if (!selectedUserEmail) return alert("Select a user");
+    if (!selectedUserEmail) return alert("Select a user first");
     try {
       const res = await axiosInstance.put("/user/deactivate-user", { email: selectedUserEmail });
       alert(res.data.message);
       setSelectedUserEmail("");
-      const refreshed = await axios.get("/admin/users");
+
+      // Refresh users
+      const refreshed = await axiosInstance.get("/admin/users", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+      });
       setUsers(refreshed.data?.data || []);
     } catch (err) {
       console.error("User deactivation failed", err);
+      alert("User deactivation failed");
     }
   };
+
+  // ✅ Delete User
+  const deleteUser = async () => {
+    if (!selectedUserEmail) return alert("Select a user first");
+    try {
+      const res = await axiosInstance.delete("/user/delete-user", {
+        data: { email: selectedUserEmail }, // axios delete needs data in `data`
+      });
+      alert(res.data.message);
+      setSelectedUserEmail("");
+
+      // Refresh users
+      const refreshed = await axiosInstance.get("/admin/users", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("adminToken")}` },
+      });
+      setUsers(refreshed.data?.data || []);
+    } catch (err) {
+      console.error("User deletion failed", err);
+      alert("User deletion failed");
+    }
+  };
+
 
   const { totalCars = 0, totalUsers = 0, totalBookings = 0, totalRevenue = 0 } = stats;
 
   const navLinks = [
     { label: "Dashboard", path: "/admin/profile", icon: <FaTachometerAlt /> },
     { label: "Users", path: "/admin/users", icon: <FaUsers /> },
+    { label: "Cars", path: "/admin/cars", icon: <FaCar /> },
+    { label: "Add Car", path: "/admin/addcar", icon: <FaCar /> },
   ];
 
   const contentShift = isCollapsed ? "md:ml-[80px]" : "md:ml-[260px]";
@@ -156,7 +193,7 @@ export const Dashboard = () => {
             </button>
           ))}
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className={`mt-4 flex items-center gap-3 px-4 py-3 text-error hover:bg-error/20 rounded-lg transition
               ${isCollapsed ? "justify-center" : ""}`}
           >
@@ -181,14 +218,39 @@ export const Dashboard = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { label: "Total Cars", value: totalCars, icon: <FaCar />, color: "bg-blue-100" },
-              { label: "Users", value: totalUsers, icon: <FaUsers />, color: "bg-green-100" },
-              { label: "Bookings", value: totalBookings, icon: <FaClipboardList />, color: "bg-purple-100" },
-              { label: "Revenue", value: `$${totalRevenue.toLocaleString()}`, icon: <FaDollarSign />, color: "bg-yellow-100" },
+              {
+                label: "Total Cars",
+                value: totalCars,
+                icon: <FaCar />,
+                light: "bg-blue-100",
+                dark: "bg-blue-900"
+              },
+              {
+                label: "Users",
+                value: totalUsers,
+                icon: <FaUsers />,
+                light: "bg-green-100",
+                dark: "bg-green-900"
+              },
+              {
+                label: "Bookings",
+                value: totalBookings,
+                icon: <FaClipboardList />,
+                light: "bg-purple-100",
+                dark: "bg-purple-900"
+              },
+              {
+                label: "Revenue",
+                value: `$${totalRevenue.toLocaleString()}`,
+                icon: <FaDollarSign />,
+                light: "bg-yellow-100",
+                dark: "bg-yellow-900"
+              },
             ].map((card, i) => (
               <div
                 key={i}
-                className={`rounded-2xl p-6 shadow hover:shadow-xl transition flex items-center gap-4 bg-base-200`}
+                className={`rounded-2xl p-6 transition flex items-center gap-4 ${darkMode ? card.dark : card.light
+                  }`}
               >
                 <div className="p-3 rounded-full bg-base-100 shadow text-xl">{card.icon}</div>
                 <div>
@@ -199,6 +261,8 @@ export const Dashboard = () => {
             ))}
           </div>
 
+
+          {/* Actions */}
           {/* Actions */}
           <div className="space-y-4">
             <button
@@ -214,19 +278,21 @@ export const Dashboard = () => {
                 value={selectedUserEmail}
                 onChange={(e) => setSelectedUserEmail(e.target.value)}
               >
-                <option value="">Select user to deactivate</option>
+                <option value="">Select user</option>
                 {users.filter((u) => u.role !== "admin").map((u) => (
                   <option key={u._id} value={u.email}>{u.name} ({u.email})</option>
                 ))}
               </select>
-              <button
-                onClick={deactivateUser}
-                className="btn btn-warning text-white"
-              >
+
+              <button onClick={deactivateUser} className="btn btn-warning text-white">
                 Deactivate User
+              </button>
+              <button onClick={deleteUser} className="btn btn-error text-white">
+                Delete User
               </button>
             </div>
           </div>
+
         </main>
       </div>
     </div>

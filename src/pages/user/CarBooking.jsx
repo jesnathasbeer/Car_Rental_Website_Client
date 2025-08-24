@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CarBooking = () => {
   const location = useLocation();
@@ -20,7 +20,6 @@ const CarBooking = () => {
   });
 
   const [totalAmount, setTotalAmount] = useState(0);
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const indianLocations = [
     "Delhi", "Mumbai", "Bengaluru", "Chennai", "Hyderabad", "Kolkata",
@@ -45,15 +44,11 @@ const CarBooking = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ Simple validation
     if (!formData.name || !formData.email || !formData.pickupDate || !formData.returnDate || !formData.pickupLocation || !formData.dropoffLocation) {
       alert("Please fill all fields");
       return;
     }
 
-    setFormSubmitted(true);
-
-    // ✅ Navigate to payment
     navigate("/user/payment", {
       state: {
         carId,
@@ -70,6 +65,9 @@ const CarBooking = () => {
     });
   };
 
+  // ✅ Get today’s date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <section className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center px-4 py-12">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg max-w-xl w-full">
@@ -82,12 +80,29 @@ const CarBooking = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="text" name="name" placeholder="Full Name" required value={formData.name} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" />
+          {/* ✅ Name (Editable) */}
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+          />
 
-          <input type="email" name="email" placeholder="Email Address" required value={formData.email} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white" />
+          {/* ✅ Email (Editable) */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+          />
 
+          {/* Pickup & Return Dates */}
           <div>
             <label htmlFor="pickupDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Pickup Date
@@ -97,13 +112,14 @@ const CarBooking = () => {
               name="pickupDate"
               id="pickupDate"
               required
+              min={today}  // ✅ Cannot pick past dates
               value={formData.pickupDate}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
             />
           </div>
 
-          <div className="relative">
+          <div>
             <label htmlFor="returnDate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Return Date
             </label>
@@ -112,30 +128,49 @@ const CarBooking = () => {
               name="returnDate"
               id="returnDate"
               required
+              min={formData.pickupDate || today}  // ✅ Must be after pickup date
               value={formData.returnDate}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
             />
           </div>
 
-
-          <select name="pickupLocation" required value={formData.pickupLocation} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
+          {/* Pickup & Dropoff Locations */}
+          <select
+            name="pickupLocation"
+            required
+            value={formData.pickupLocation}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+          >
             <option value="">Select Pickup Location</option>
-            {indianLocations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+            {indianLocations.map(loc => (
+              <option key={loc} value={loc}>{loc}</option>
+            ))}
           </select>
 
-          <select name="dropoffLocation" required value={formData.dropoffLocation} onChange={handleChange}
-            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white">
+          <select
+            name="dropoffLocation"
+            required
+            value={formData.dropoffLocation}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-white"
+          >
             <option value="">Select Drop-off Location</option>
-            {indianLocations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+            {indianLocations.map(loc => (
+              <option key={loc} value={loc}>{loc}</option>
+            ))}
           </select>
 
+          {/* Total Amount */}
           <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 font-semibold text-center">
             Total Amount: ₹{totalAmount}
           </div>
 
-          <button type="submit" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg">
+          <button
+            type="submit"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg"
+          >
             Confirm & Proceed to Payment
           </button>
         </form>

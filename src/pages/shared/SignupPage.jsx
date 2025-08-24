@@ -1,17 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaImage } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { axiosInstance } from "../../config/axiosInstance";
 import { saveUser } from "../../redux/features/userSlice";
 import { useDispatch } from "react-redux";
-import signupImg from "../../assets/RentACar-img9.jpg";
+import carImage from "../../assets/login-car-image.png";
+import { useTheme } from "../../context/ThemeContext"; // ✅ for theme toggle
 
 const SignupPage = () => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { darkMode } = useTheme(); // ✅ detect theme (default = dark)
   const [image, setImage] = React.useState(null);
 
   const onSubmit = async (data) => {
@@ -31,24 +33,18 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-base-100 flex items-center justify-center px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-base-200 shadow-xl rounded-3xl w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden"
+    <div className="min-h-screen flex">
+      {/* Left side - form */}
+      <div
+        className={`flex flex-col justify-center items-start pl-16 transition-colors duration-500
+        ${darkMode ? "basis-3/4 bg-blue-950" : "basis-3/4 bg-yellow-200"}`}
       >
-        {/* Illustration */}
-        <div className="hidden md:block">
-          <img src={signupImg} alt="Signup Visual" className="w-full h-full object-cover" />
-        </div>
-
-        {/* Form */}
-        <div className="p-8">
+        <div className="w-full max-w-md bg-base-100 p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-center mb-2 text-base-content">Sign Up</h2>
           <p className="text-center text-sm text-base-content/70 mb-6">Create your account below</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Name */}
             <div className="form-control">
               <label className="label">Name</label>
               <div className="relative">
@@ -62,6 +58,7 @@ const SignupPage = () => {
               {errors.name && <p className="text-error text-xs mt-1">{errors.name.message}</p>}
             </div>
 
+            {/* Email */}
             <div className="form-control">
               <label className="label">Email</label>
               <div className="relative">
@@ -76,6 +73,7 @@ const SignupPage = () => {
               {errors.email && <p className="text-error text-xs mt-1">{errors.email.message}</p>}
             </div>
 
+            {/* Mobile */}
             <div className="form-control">
               <label className="label">Mobile Number</label>
               <div className="relative">
@@ -90,6 +88,7 @@ const SignupPage = () => {
               {errors.mobile && <p className="text-error text-xs mt-1">{errors.mobile.message}</p>}
             </div>
 
+            {/* Password */}
             <div className="form-control">
               <label className="label">Password</label>
               <div className="relative">
@@ -104,6 +103,7 @@ const SignupPage = () => {
               {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
             </div>
 
+            {/* Confirm Password */}
             <div className="form-control">
               <label className="label">Confirm Password</label>
               <div className="relative">
@@ -121,6 +121,7 @@ const SignupPage = () => {
               {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
             </div>
 
+            {/* Profile Image */}
             <div className="form-control">
               <label className="label">Profile Image</label>
               <input
@@ -131,6 +132,7 @@ const SignupPage = () => {
               />
             </div>
 
+            {/* Submit */}
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
@@ -148,7 +150,19 @@ const SignupPage = () => {
             </p>
           </form>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Right side - image */}
+      <div
+        className={`hidden md:flex items-center justify-center relative transition-colors duration-500
+        ${darkMode ? "basis-1/4 bg-gray-900" : "basis-1/4 bg-white"}`}
+      >
+        <img
+          src={carImage}
+          alt="Car"
+          className="w-[700px] max-w-none object-contain absolute left-0 -translate-x-1/2"
+        />
+      </div>
     </div>
   );
 };

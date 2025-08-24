@@ -20,11 +20,11 @@ export const UserHeader = () => {
         <div className="hidden md:flex justify-center items-center gap-16">
           <nav>
             <ul className="flex justify-center items-center gap-10 font-bold text-md">
-              <li>
+              {/* <li>
                 <Link to="/" className="hover:text-yellow-600 transition duration-300">
                   Home
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/cars" className="hover:text-yellow-600 transition duration-300">
                   Cars

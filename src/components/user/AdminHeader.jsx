@@ -3,9 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { DarkMode } from "../shared/DarkMode";
 import { CircleUser, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { clearAdmin } from "../../redux/features/adminSlice";
 
 export const AdminHeader = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
@@ -37,7 +40,8 @@ export const AdminHeader = () => {
             <button
               onClick={() => {
                 localStorage.removeItem("adminToken");
-                navigate("/admin/login");
+                dispatch(clearAdmin());
+                navigate("/");
               }}
               className="hover:text-yellow-600 transition duration-300"
             >
@@ -87,7 +91,8 @@ export const AdminHeader = () => {
                   <button
                     onClick={() => {
                       localStorage.removeItem("adminToken");
-                      navigate("/admin/login");
+                      dispatch(clearAdmin());
+                      navigate("/");
                     }}
                     className="hover:text-yellow-600 transition duration-300"
                   >
